@@ -1,0 +1,262 @@
+//Create User
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+    "name" : "Guest",
+    "email" : "guest@gmail.com",
+    "password" : "guest",
+    "confPassword" : "guest",
+    "role" : "guest"
+}
+
+###
+//get All User
+GET http://localhost:5000/users
+
+###
+//get Single User
+GET http://localhost:5000/users/480e6d50-59f7-47f3-a8b8-ad2c77315c33
+
+###
+//update user
+PATCH  http://localhost:5000/users/6d1a40ab-eece-458a-9fad-754bfc3e311b
+Content-Type: application/json
+
+{
+    "name" : "Jinki Lee",
+    "email" : "leejinki@gmail.com",
+    "password" : "",
+    "confPassword" : "",
+    "role" : "pustakawan"
+}
+
+###
+//delete user
+DELETE http://localhost:5000/users/e7d51f37-9d90-4cc5-8b58-96b3fb6f175b
+
+###
+//login user
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email" : "leejinki@gmail.com",
+    "password" : "123456"
+}
+
+###
+//data user sedang login
+GET http://localhost:5000/me
+
+###
+//logout
+DELETE http://localhost:5000/logout
+
+###
+//Create Language
+POST http://localhost:5000/languages
+Content-Type: application/json
+
+{
+    "language" : "Jawa"
+}
+
+###
+//get All Language
+GET http://localhost:5000/languages
+
+###
+//get Single Language
+GET http://localhost:5000/languages/6cbbfb3a-91ee-4f77-bb9f-fc0e5dfd2d1c
+
+###
+//update languages
+PATCH  http://localhost:5000/languages/e9991442-d8ec-409c-b2e6-84b05d38b06a
+Content-Type: application/json
+
+{
+    "language": "Bahasa Lainnya"
+}
+
+###
+//delete user
+DELETE http://localhost:5000/languages/6cbbfb3a-91ee-4f77-bb9f-fc0e5dfd2d1c
+
+###
+//Create category
+POST http://localhost:5000/categories
+Content-Type: application/json
+
+{
+    "code" : "NFa",
+    "category" : "Non-Fiksai"
+}
+
+###
+//get All category
+GET http://localhost:5000/categories
+
+###
+//get Single category
+GET http://localhost:5000/categories/c4e0ac2d-f516-44ad-837a-96ffb790b923
+
+###
+//update category
+PATCH  http://localhost:5000/categories/dfe2c9b5-04bb-42c4-b592-122db138d2eb
+Content-Type: application/json
+
+{
+    "code" : "NF",
+    "category": "Non Fiksi"
+}
+
+###
+//delete category
+DELETE http://localhost:5000/categories/c4e0ac2d-f516-44ad-837a-96ffb790b923
+
+###
+//Create story type
+POST http://localhost:5000/story-types
+Content-Type: application/json
+
+{
+    "code" : "NYC",
+    "story_type" : "Belum Terkategori"
+}
+
+###
+//get All story type
+GET http://localhost:5000/story-types
+
+###
+//get Single story type
+GET http://localhost:5000/story-types/91e586cf-8d09-4ba4-8f14-b4b562038df4
+
+###
+//update story type
+PATCH  http://localhost:5000/story-types/92279f82-a827-436f-ad42-25e5ea63952b
+Content-Type: application/json
+
+{
+    "code" : "NYC",
+    "story_type": "Belum Terkategori"
+}
+
+###
+//delete story type
+DELETE http://localhost:5000/story-types/91e586cf-8d09-4ba4-8f14-b4b562038df4
+
+###
+//Create digital format
+POST http://localhost:5000/digital-format
+Content-Type: application/json
+
+{
+    "digital_format" : "Film"
+}
+
+###
+//get All digital format
+GET http://localhost:5000/digital-format
+
+###
+//get Single digital format
+GET http://localhost:5000/digital-format/62a0d502-edda-4feb-8171-5fac8c43bb15
+
+###
+//update digital format
+PATCH  http://localhost:5000/digital-format/62a0d502-edda-4feb-8171-5fac8c43bb15
+Content-Type: application/json
+
+{
+    "digital_format": "Lagu"
+}
+
+###
+//delete digital format
+DELETE http://localhost:5000/digital-format/62a0d502-edda-4feb-8171-5fac8c43bb15
+
+###
+//Create collection
+POST http://localhost:5000/collections
+Content-Type: application/json
+
+{
+    "no_bp" : "1066",
+    "isbn" : "979-666-302-3",
+    "title" : "Tidak Membalas Guna",
+    "writer" : "Tulis Sutan Sati",
+    "publish_1st_year" : "1934",
+    "publish_last_year" : "2011",
+    "amount_printed" : 3,
+    "synopsis" : "",
+    "categoryId" : 1, 
+    "storyTypeId" : 2,
+    "languageId" : 1,
+    "digitalDataId" : [1,4]
+}
+###
+//get All Collection
+GET http://localhost:5000/collections
+
+###
+//get Single Collection
+GET http://localhost:5000/collections/9548c155-cdcd-4fc3-a211-b5e979d5159c
+
+###
+//update collection
+PATCH http://localhost:5000/collections/b2d98c41-03d9-48a8-9979-ed9bfc51dec2
+Content-Type: application/json
+
+{
+    "no_bp" : "1066",
+    "isbn" : "979-666-302-3",
+    "title" : "Tidak Membalas Guna",
+    "writer" : "Tulis Sutan Sati",
+    "publish_1st_year" : "1934",
+    "publish_last_year" : "2011",
+    "amount_printed" : 3,
+    "synopsis" : "",
+    "categoryId" : 1, 
+    "storyTypeId" : 2,
+    "languageId" : 1,
+    "digitalDataId" : [4]
+}
+###
+//delete collection
+DELETE http://localhost:5000/collections/8ba53036-f892-4406-96cd-02c2d60b1917
+
+###
+//Create digital data
+POST http://localhost:5000/digital-data
+Content-Type: application/json
+
+{
+    "title" : "Tidak Membalas Guna",
+    "file_digital": "Tidak Membalas Guna.pdf",
+    "digitalFormatId": 1
+}
+
+###
+//get All digital data
+GET http://localhost:5000/digital-data
+
+###
+//get Single digital data
+GET http://localhost:5000/digital-data/3f9c21e0-8fd5-49cd-b601-b832b94a1db9
+
+###
+//update digital data
+PATCH  http://localhost:5000/digital-data/3f9c21e0-8fd5-49cd-b601-b832b94a1db9
+Content-Type: application/json
+
+{
+    "title" : "500000 Pepatah",
+    "file_digital": "500 Pepatah.pdf",
+    "digitalFormatId": 1
+}
+
+###
+//delete digital data
+DELETE http://localhost:5000/digital-data/3f9c21e0-8fd5-49cd-b601-b832b94a1db9
