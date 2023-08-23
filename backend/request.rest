@@ -202,11 +202,11 @@ GET http://localhost:5000/collections
 
 ###
 //get Single Collection
-GET http://localhost:5000/collections/9548c155-cdcd-4fc3-a211-b5e979d5159c
+GET http://localhost:5000/collections/ec5fada3-169c-4a42-9bb2-9f054a623d50
 
 ###
 //update collection
-PATCH http://localhost:5000/collections/b2d98c41-03d9-48a8-9979-ed9bfc51dec2
+PATCH http://localhost:5000/collections/ec5fada3-169c-4a42-9bb2-9f054a623d50
 Content-Type: application/json
 
 {
@@ -225,7 +225,7 @@ Content-Type: application/json
 }
 ###
 //delete collection
-DELETE http://localhost:5000/collections/8ba53036-f892-4406-96cd-02c2d60b1917
+DELETE http://localhost:5000/collections/b2d98c41-03d9-48a8-9979-ed9bfc51dec2
 
 ###
 //Create digital data
