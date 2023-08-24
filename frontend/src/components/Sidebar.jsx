@@ -1,21 +1,28 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {NavLink, useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { LogOut, reset } from "../features/authSlice";
 import {IoPerson, IoHome, IoLogOut, IoBook, IoDocumentAttach,IoBookmark} from "react-icons/io5";
+import LogoutConfirmation from './LogoutConfirmation';
 
 const Sidebar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const {user} = useSelector((state => state.auth));
+    
+    const [modalState, setModalState] = useState(false);
+    const toggleModal = () => {
+        setModalState(!modalState);
+    };
     const logout = () => {
         dispatch(LogOut());
         dispatch(reset());
         navigate("/");
+        setModalState(false);
     };
   return (
     <div>
-        <aside className="menu pl-2 mt-4 has-shadow">
+        <aside className="menu pl-2 mt-4 has-shadow is-narrow-mobile is-fullheight is-hidden-mobile">
             <p className="menu-label">
                 General
             </p>
@@ -52,7 +59,8 @@ const Sidebar = () => {
                 Pengaturan
             </p>
             <ul className="menu-list">
-                <li><button onClick={logout} className="button is-white"> <IoLogOut/> Logout</button></li>
+                <li><button onClick={() => toggleModal() } className="button is-white"> <IoLogOut/> Logout</button></li>
+                <LogoutConfirmation confirmModal={logout} hideModal={toggleModal} modalState={modalState}  />
             </ul>
             </aside>
     </div>

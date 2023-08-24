@@ -82,6 +82,7 @@ export const deleteUser = async(req, res) => {
         }
     });
     if(!user) return res.status(404).json({msg: "User tidak ditemukan"});    
+    if(user.id === req.userId) return res.status(500).json({msg: "Anda tidak dapat menghapus akun Anda sendiri"})
     try{
         await User.destroy({
             where: {

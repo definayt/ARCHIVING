@@ -3,10 +3,10 @@ POST http://localhost:5000/users
 Content-Type: application/json
 
 {
-    "name" : "Guest",
-    "email" : "guest@gmail.com",
-    "password" : "guest",
-    "confPassword" : "guest",
+    "name" : "Test",
+    "email" : "tes@gmail.com",
+    "password" : "123456",
+    "confPassword" : "123456",
     "role" : "guest"
 }
 
@@ -24,11 +24,11 @@ PATCH  http://localhost:5000/users/6d1a40ab-eece-458a-9fad-754bfc3e311b
 Content-Type: application/json
 
 {
-    "name" : "Jinki Lee",
-    "email" : "leejinki@gmail.com",
-    "password" : "",
-    "confPassword" : "",
-    "role" : "pustakawan"
+    "name" : "Super Admin",
+    "email" : "superadmin@gmail.com",
+    "password" : "123456",
+    "confPassword" : "123456",
+    "role" : "super-admin"
 }
 
 ###
@@ -41,8 +41,8 @@ POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-    "email" : "leejinki@gmail.com",
-    "password" : "123456"
+    "email" : "guest@gmail.com",
+    "password" : "guest"
 }
 
 ###

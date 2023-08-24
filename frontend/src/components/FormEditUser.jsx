@@ -10,6 +10,7 @@ const FormEditUser = () => {
     const [confPassword, setConfPassword] = useState("");
     const [role, setRole] = useState("");
     const [msg, setMsg] = useState("");
+    const [showMessageError, setShowMessageError] = useState(false);
     const navigate = useNavigate();
     const {id} = useParams();
 
@@ -53,6 +54,7 @@ const FormEditUser = () => {
             navigate("/users");
         } catch (error) {
             if(error.response){
+                setShowMessageError(true);
                 setMsg(error.response.data.msg);
             }
         }
@@ -60,13 +62,17 @@ const FormEditUser = () => {
 
   return (
     <div>
-        <h1 className='title'>Users</h1>
-        <h2 className='subtitle'>Edit User</h2>
+        <h1 className='title has-text-centered mt-3'>Users</h1>
+        <h2 className='subtitle has-text-centered'>Edit User</h2>
         <div className="card">
             <div className="card-content">
                 <div className="content">
                     <form onSubmit={updateUser}>
-                    <p className='hastest-center'>{msg}</p>
+                        <article class="message is-danger" style={{display: showMessageError ? 'block' : 'none' }}>
+                            <div class="message-body">
+                            {msg}
+                            </div>
+                        </article>
                         <div className="field">
                             <label className="label">Nama</label>
                             <div className="control">
@@ -131,8 +137,10 @@ const FormEditUser = () => {
                         </div>
                         <div className="field">
                             <div className="control">
-                                <Link to={"/users"} className="button is-danger mr-2">Batal</Link>
-                                <button type='submit' className="button is-success">Simpan</button>
+                                <div className='buttons is-centered'>
+                                    <Link to={"/users"} className="button is-danger mr-2">Batal</Link>
+                                    <button type='submit' className="button is-success">Simpan</button>
+                                </div>
                             </div>
                         </div>
                     </form>

@@ -9,10 +9,11 @@ import 'datatables.net-buttons/js/dataTables.buttons.min';
 import 'datatables.net-buttons/js/buttons.print.min.js';
 import 'datatables.net-buttons/js/buttons.colVis.min.js';
 import 'datatables.net-buttons/js/buttons.html5.min.js';
-import pdfMake from 'pdfmake/js/pdfmake.min.js';
-import  pdfFonts from 'pdfmake/js/vfs_fonts.js';
+import pdfMake from 'pdfmake/build/pdfmake.min.js';
+import  pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import "datatables.net-dt/css/jquery.dataTables.min.css";
-const jzip = require( 'jszip/js/jszip.min.js');
+import DeleteConfirmation from './DeleteConfirmation';
+const jzip = require( 'jszip/dist/jszip.min.js');
 window.JSZip = jzip;
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -42,6 +43,13 @@ const UserList = () => {
             });
     };
 
+    const [modalDeleteState, setModalDeleteState] = useState(false);
+    const [userIdState, setUserIdState] = useState("");
+    const toggleModalDelete = (dataId) => {
+        setModalDeleteState(!modalDeleteState);
+        setUserIdState(dataId);
+    };
+
     const deleteUser = async (userId) => {
         await axios.delete(`http://localhost:5000/users/${userId}`);
         getUsers();
@@ -51,6 +59,7 @@ const UserList = () => {
     const drawDataTable = () =>{
         $('#datatable').DataTable({
             "bDestroy": true,
+            scrollX: true,
             dom: 'Bfrtip',
             buttons: [
                 {
@@ -99,10 +108,13 @@ const UserList = () => {
     });
   return (
     <div>
-        <h1 className='title'>Users</h1>
-        <h2 className='subtitle'>List of Users</h2>
-        <Link to={"/users/add"} className='button is-primary mb-2'>Tambah</Link>
-        <table id='datatable' className='table is-striped is-fullwidth'>
+        <h1 className='title has-text-centered mt-3'>Users</h1>
+        <h2 className='subtitle has-text-centered'>List of Users</h2>
+        
+        <div className="buttons is-right">
+            <Link to={"/users/add"} className='button is-primary mb-2'>Tambah</Link>
+        </div>
+        <table id='datatable' className='table is-striped' style={{minWidth: "100%"}}>
             <thead>
                 <tr>
                     <th>No</th>
@@ -121,7 +133,8 @@ const UserList = () => {
                     <td>{user.role}</td>
                     <td>
                         <Link to={`/users/edit/${user.uuid}`} className='button bulma is-small is-rounded is-warning mr-2'> Edit</Link>
-                        <button onClick={()=> deleteUser(user.uuid)} className='button bulma is-small is-rounded is-danger'> Delete</button>
+                        <button onClick={() => toggleModalDelete(user.uuid) } className='button bulma is-small is-rounded is-danger'> Delete</button>
+                        <DeleteConfirmation confirmModal={deleteUser} hideModal={toggleModalDelete} modalState={modalDeleteState} dataId={userIdState}  />
                     </td>
                 </tr>
                ))}
