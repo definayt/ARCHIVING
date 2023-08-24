@@ -20,7 +20,7 @@ const AddUser = () => {
         }
         // if((user && (user.role === "non-pustakawan" || user.role === "guest"))){
         if(user && user.role !== "super-admin"){
-            navigate("/dashboard");
+            navigate("/403");
         }
     }, [isError, user, navigate]);
   return (

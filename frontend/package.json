@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^14.4.3",
     "axios": "^1.4.0",
     "bulma": "^0.9.4",
+    "datatables.net-buttons": "^2.4.1",
     "datatables.net-dt": "^1.13.6",
     "jquery": "^3.7.0",
     "react": "^18.2.0",

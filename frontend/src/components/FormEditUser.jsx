@@ -1,14 +1,63 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Select from 'react-select';
 
 const FormEditUser = () => {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confPassword, setConfPassword] = useState("");
+    const [role, setRole] = useState("");
+    const [msg, setMsg] = useState("");
+    const navigate = useNavigate();
+    const {id} = useParams();
+
     const roleOptions = [
         { value: 'guest', label: 'Guest'},
         { value: 'non-pustakawan', label: 'Non Pustakawan'},
         { value: 'pustakawan', label: 'Pustakawan'},
         { value: 'super-admin', label: 'Super Admin' },
-        
       ];
+
+    useEffect(() => {
+        const getUserById = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/users/${id}`);
+                setName(response.data.name);
+                setEmail(response.data.email);
+                roleOptions.forEach(element => {
+                    if(element.value === response.data.role){
+                        setRole(element);
+                    }
+                });
+            } catch (error) {
+                if(error.response){
+                    setMsg(error.response.data.msg);
+                }
+            }
+        };
+        getUserById();
+    }, [id]);
+
+    const updateUser = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.patch(`http://localhost:5000/users/${id}`, {
+                name:name,
+                email: email,
+                password: password,
+                confPassword: confPassword,
+                role: role.value,
+            });
+            navigate("/users");
+        } catch (error) {
+            if(error.response){
+                setMsg(error.response.data.msg);
+            }
+        }
+    };
+
   return (
     <div>
         <h1 className='title'>Users</h1>
@@ -16,29 +65,52 @@ const FormEditUser = () => {
         <div className="card">
             <div className="card-content">
                 <div className="content">
-                    <form>
+                    <form onSubmit={updateUser}>
+                    <p className='hastest-center'>{msg}</p>
                         <div className="field">
                             <label className="label">Nama</label>
                             <div className="control">
-                                <input type="text" className="input" placeholder='Nama' />
+                                <input 
+                                    type="text" 
+                                    className="input" 
+                                    value={name} 
+                                    onChange={(e) => setName(e.target.value)} 
+                                    placeholder='Nama' />
                             </div>
                         </div>
                         <div className="field">
                             <label className="label">Email</label>
                             <div className="control">
-                                <input type="text" className="input" placeholder='Email' />
+                                <input 
+                                    type="email" 
+                                    className="input" 
+                                    value={email} 
+                                    onChange={(e) => setEmail(e.target.value)} 
+                                    placeholder='Email' />
                             </div>
                         </div>
                         <div className="field">
                             <label className="label">Password</label>
                             <div className="control">
-                                <input type="password" className="input" placeholder='Password' />
+                                <input 
+                                    type="password" 
+                                    className="input" 
+                                    value={password} 
+                                    onChange={(e) => setPassword(e.target.value)} 
+                                    placeholder='Password'
+                                     />
                             </div>
                         </div>
                         <div className="field">
                             <label className="label">Konfirmasi Password</label>
                             <div className="control">
-                                <input type="password" className="input" placeholder='Konfirmasi Password' />
+                                <input 
+                                    type="password" 
+                                    className="input" 
+                                    value={confPassword} 
+                                    onChange={(e) => setConfPassword(e.target.value)} 
+                                    placeholder='Konfirmasi Password'
+                                     />
                             </div>
                         </div>
                         <div className="field">
@@ -50,7 +122,8 @@ const FormEditUser = () => {
                                     defaultValue={roleOptions[0]}
                                     isClearable="true"
                                     isSearchable="true"
-                                    name="role"
+                                    value={role} 
+                                    onChange={(e) => setRole(e)}
                                     options={roleOptions}
                                 >
                                 </Select>
@@ -58,7 +131,8 @@ const FormEditUser = () => {
                         </div>
                         <div className="field">
                             <div className="control">
-                                <button className="button is-success is-fullwidth">Simpan</button>
+                                <Link to={"/users"} className="button is-danger mr-2">Batal</Link>
+                                <button type='submit' className="button is-success">Simpan</button>
                             </div>
                         </div>
                     </form>

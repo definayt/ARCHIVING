@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import Users from "./pages/Users";
 import AddUser from "./pages/AddUser";
 import EditUser from "./pages/EditUser";
+import Page403 from "./pages/Page403";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login/>}/>
           <Route path="/dashboard" element={<Dashboard/>}/>
+          <Route path="/403" element={<Page403/>}/>
           <Route path="/users" element={<Users/>}/>
           <Route path="/users/add" element={<AddUser/>}/>
           <Route path="/users/edit/:id" element={<EditUser/>}/>
@@ -22,3 +24,4 @@ function App() {
 };
 
 export default App;
+

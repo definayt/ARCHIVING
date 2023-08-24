@@ -19,7 +19,7 @@ const EditUser = () => {
             navigate("/");
         }
         if(user && user.role !== "super-admin"){
-            navigate("/dashboard");
+            navigate("/403");
         }
     }, [isError, user, navigate]);
   return (
