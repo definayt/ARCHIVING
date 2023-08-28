@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import Select from 'react-select';
+import SuccessModal from './SuccessModal';
 
 const FormAddUser = () => {
     const [name, setName] = useState("");
@@ -13,6 +14,15 @@ const FormAddUser = () => {
     const [showMessageError, setShowMessageError] = useState(false);
     const navigate = useNavigate();
 
+    const [modalState, setModalState] = useState(false);
+    
+    const toggleModal = () => {
+        setModalState(!modalState);
+    };
+    const navigation = () => {
+        navigate("/users");
+    };
+
     const saveUser = async (e) => {
         e.preventDefault();
         try {
@@ -23,7 +33,7 @@ const FormAddUser = () => {
                 confPassword: confPassword,
                 role: role.value,
             });
-            navigate("/users");
+            toggleModal();
         } catch (error) {
             if(error.response){
                 setShowMessageError(true);
@@ -41,14 +51,15 @@ const FormAddUser = () => {
       ];
   return (
     <div>
+        <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data berhasil ditambahkan."}  />
         <h1 className='title has-text-centered mt-3'>Users</h1>
         <h2 className='subtitle has-text-centered'>Add User</h2>
         <div className="card">
             <div className="card-content">
                 <div className="content">
                     <form onSubmit={saveUser}>
-                        <article class="message is-danger" style={{display: showMessageError ? 'block' : 'none' }}>
-                            <div class="message-body">
+                        <article className="message is-danger" style={{display: showMessageError ? 'block' : 'none' }}>
+                            <div className="message-body">
                             {msg}
                             </div>
                         </article>

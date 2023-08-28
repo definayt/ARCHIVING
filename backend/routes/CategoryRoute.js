@@ -7,14 +7,14 @@ import {
     updateCategory,
     deleteCategory
 } from "../controllers/Category.js";
-import { verifyUser, superAdminOnly } from "../middleware/AuthUser.js";
+import { verifyUser, pustakawanAndSuperAdminOnly } from "../middleware/AuthUser.js";
 
 const router = express.Router();
 
-router.get('/categories', verifyUser, superAdminOnly, getCategories);
-router.get('/categories/:id', verifyUser, superAdminOnly, getCategoryById);
-router.post('/categories', verifyUser, superAdminOnly, createCategory);
-router.patch('/categories/:id', verifyUser, superAdminOnly, updateCategory);
-router.delete('/categories/:id', verifyUser, superAdminOnly, deleteCategory);
+router.get('/categories', verifyUser, pustakawanAndSuperAdminOnly, getCategories);
+router.get('/categories/:id', verifyUser, pustakawanAndSuperAdminOnly, getCategoryById);
+router.post('/categories', verifyUser, pustakawanAndSuperAdminOnly, createCategory);
+router.patch('/categories/:id', verifyUser, pustakawanAndSuperAdminOnly, updateCategory);
+router.delete('/categories/:id', verifyUser, pustakawanAndSuperAdminOnly, deleteCategory);
 
 export default router;

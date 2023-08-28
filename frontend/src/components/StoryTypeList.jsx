@@ -18,19 +18,19 @@ const jzip = require( 'jszip/dist/jszip.min.js');
 window.JSZip = jzip;
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-const UserList = () => {
-    const [users, setUsers] = useState([]);
+const StoryTypeList = () => {
+    const [storyTypes, setStoryType] = useState([]);
     var today = new Date(),
     date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 
     useEffect(()=>{
-        getUsers();
+        getStoryTypes();
     }, []);
     const navigate = useNavigate();
-    const getUsers = async () => {
-        await axios.get('http://localhost:5000/users')
+    const getStoryTypes = async () => {
+        await axios.get('http://localhost:5000/story-types')
             .then((response) => {
-                setUsers(response.data);
+                setStoryType(response.data);
             })
             .catch((error) => {
                 // Error
@@ -45,10 +45,10 @@ const UserList = () => {
     };
 
     const [modalDeleteState, setModalDeleteState] = useState(false);
-    const [userIdState, setUserIdState] = useState("");
+    const [storyTypeIdState, setStoryTypeIdState] = useState("");
     const toggleModalDelete = (dataId) => {
         setModalDeleteState(!modalDeleteState);
-        setUserIdState(dataId);
+        setStoryTypeIdState(dataId);
     };
 
     const [modalState, setModalState] = useState(false);
@@ -60,8 +60,8 @@ const UserList = () => {
         window.location.reload(false);
     };
 
-    const deleteUser = async (userId) => {
-        await axios.delete(`http://localhost:5000/users/${userId}`);
+    const deleteStoryType = async (storyTypeId) => {
+        await axios.delete(`http://localhost:5000/story-types/${storyTypeId}`);
         
         toggleModalDelete();
         toggleModal();
@@ -76,7 +76,7 @@ const UserList = () => {
                 {
                     extend: 'excelHtml5',
                     // eslint-disable-next-line no-useless-concat
-                    title: date+'_'+'Data User Sistem Archiving Balai Pustaka',
+                    title: date+'_'+'Data Jenis Cerita Sistem Archiving Balai Pustaka',
                     className: 'button is-small',
                     exportOptions: {
                         columns: ':visible'
@@ -85,7 +85,7 @@ const UserList = () => {
                 {
                     extend: 'pdfHtml5',
                     // eslint-disable-next-line no-useless-concat
-                    title: date+'_'+'Data User Sistem Archiving Balai Pustaka',
+                    title: date+'_'+'Data Jenis Cerita Sistem Archiving Balai Pustaka',
                     className: 'button is-small',
                     exportOptions: {
                         columns: ':visible'
@@ -94,7 +94,7 @@ const UserList = () => {
                 {
                     extend: 'print',
                     // eslint-disable-next-line no-useless-concat
-                    title: 'Data User Sistem Archiving Balai Pustaka',
+                    title: 'Data Jenis Cerita Sistem Archiving Balai Pustaka',
                     className: 'button is-small',
                     exportOptions: {
                         columns: ':visible'
@@ -120,33 +120,31 @@ const UserList = () => {
   return (
     <div>
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data Berhasil Dihapus"}  />
-        <h1 className='title has-text-centered mt-3'>Users</h1>
-        <h2 className='subtitle has-text-centered'>List of Users</h2>
+        <h1 className='title has-text-centered mt-3'>Story Types</h1>
+        <h2 className='subtitle has-text-centered'>List of Story Types</h2>
         
         <div className="buttons is-right">
-            <Link to={"/users/add"} className='button is-primary mb-2'>Tambah</Link>
+            <Link to={"/story-types/add"} className='button is-primary mb-2'>Tambah</Link>
         </div>
         <table id='datatable' className='table is-striped' style={{minWidth: "100%"}}>
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Nama</th>
-                    <th>Email</th>
-                    <th>Role</th>
+                    <th>Kode</th>
+                    <th>Jenis Cerita</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-               {users.map((user, index) => (
-                <tr key={user.uuid}>
+               {storyTypes.map((storyType, index) => (
+                <tr key={storyType.uuid}>
                     <td>{index + 1}</td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.role}</td>
+                    <td>{storyType.code}</td>
+                    <td>{storyType.story_type}</td>
                     <td>
-                        <Link to={`/users/edit/${user.uuid}`} className='button bulma is-small is-rounded is-warning mr-2'> Edit</Link>
-                        <button onClick={() => toggleModalDelete(user.uuid) } className='button bulma is-small is-rounded is-danger'> Delete</button>
-                        <DeleteConfirmation confirmModal={deleteUser} hideModal={toggleModalDelete} modalState={modalDeleteState} dataId={userIdState}  />
+                        <Link to={`/story-types/edit/${storyType.uuid}`} className='button bulma is-small is-rounded is-warning mr-2'> Edit</Link>
+                        <button onClick={() => toggleModalDelete(storyType.uuid) } className='button bulma is-small is-rounded is-danger'> Delete</button>
+                        <DeleteConfirmation confirmModal={deleteStoryType} hideModal={toggleModalDelete} modalState={modalDeleteState} dataId={storyTypeIdState}  />
                     </td>
                 </tr>
                ))}
@@ -156,4 +154,4 @@ const UserList = () => {
   )
 }
 
-export default UserList
+export default StoryTypeList

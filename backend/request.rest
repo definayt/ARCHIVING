@@ -41,8 +41,8 @@ POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-    "email" : "guest@gmail.com",
-    "password" : "guest"
+    "email" : "yasmin@gmail.com",
+    "password" : "123456"
 }
 
 ###
@@ -206,7 +206,7 @@ GET http://localhost:5000/collections/ec5fada3-169c-4a42-9bb2-9f054a623d50
 
 ###
 //update collection
-PATCH http://localhost:5000/collections/ec5fada3-169c-4a42-9bb2-9f054a623d50
+PATCH http://localhost:5000/collections/baf7a201-ab3a-4c8b-a671-e72d2fe7e772
 Content-Type: application/json
 
 {
@@ -221,7 +221,7 @@ Content-Type: application/json
     "categoryId" : 1, 
     "storyTypeId" : 2,
     "languageId" : 1,
-    "digitalDataId" : [4]
+    "digitalDataId" : [1,2]
 }
 ###
 //delete collection
@@ -235,7 +235,7 @@ Content-Type: application/json
 {
     "title" : "Tidak Membalas Guna",
     "file_digital": "Tidak Membalas Guna.pdf",
-    "digitalFormatId": 1
+    "digitalFormatId": 2
 }
 
 ###

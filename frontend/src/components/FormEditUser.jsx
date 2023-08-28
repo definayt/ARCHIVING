@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Select from 'react-select';
+import SuccessModal from './SuccessModal';
 
 const FormEditUser = () => {
     const [name, setName] = useState("");
@@ -13,6 +14,15 @@ const FormEditUser = () => {
     const [showMessageError, setShowMessageError] = useState(false);
     const navigate = useNavigate();
     const {id} = useParams();
+
+    const [modalState, setModalState] = useState(false);
+    
+    const toggleModal = () => {
+        setModalState(!modalState);
+    };
+    const navigation = () => {
+        navigate("/users");
+    };
 
     const roleOptions = [
         { value: 'guest', label: 'Guest'},
@@ -40,7 +50,7 @@ const FormEditUser = () => {
         };
         getUserById();
     }, [id]);
-
+    
     const updateUser = async (e) => {
         e.preventDefault();
         try {
@@ -51,7 +61,7 @@ const FormEditUser = () => {
                 confPassword: confPassword,
                 role: role.value,
             });
-            navigate("/users");
+            toggleModal();
         } catch (error) {
             if(error.response){
                 setShowMessageError(true);
@@ -62,6 +72,7 @@ const FormEditUser = () => {
 
   return (
     <div>
+        <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data berhasil disimpan."}  />
         <h1 className='title has-text-centered mt-3'>Users</h1>
         <h2 className='subtitle has-text-centered'>Edit User</h2>
         <div className="card">

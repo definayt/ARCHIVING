@@ -11,8 +11,8 @@ import { verifyUser, pustakawanAndSuperAdminOnly } from "../middleware/AuthUser.
 
 const router = express.Router();
 
-router.get('/digital-data', verifyUser, pustakawanAndSuperAdminOnly, getDigitalDatas);
-router.get('/digital-data/:id', verifyUser, pustakawanAndSuperAdminOnly, getDigitalDataById);
+router.get('/digital-data', verifyUser, getDigitalDatas);
+router.get('/digital-data/:id', verifyUser, getDigitalDataById);
 router.post('/digital-data', verifyUser, pustakawanAndSuperAdminOnly, createDigitalData);
 router.patch('/digital-data/:id', verifyUser, pustakawanAndSuperAdminOnly, updateDigitalData);
 router.delete('/digital-data/:id', verifyUser, pustakawanAndSuperAdminOnly, deleteDigitalData);

@@ -18,19 +18,19 @@ const jzip = require( 'jszip/dist/jszip.min.js');
 window.JSZip = jzip;
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-const UserList = () => {
-    const [users, setUsers] = useState([]);
+const CollectionList = () => {
+    const [collections, setCollections] = useState([]);
     var today = new Date(),
     date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 
     useEffect(()=>{
-        getUsers();
+        getCollections();
     }, []);
     const navigate = useNavigate();
-    const getUsers = async () => {
-        await axios.get('http://localhost:5000/users')
+    const getCollections = async () => {
+        await axios.get('http://localhost:5000/collections')
             .then((response) => {
-                setUsers(response.data);
+                setCollections(response.data);
             })
             .catch((error) => {
                 // Error
@@ -45,10 +45,10 @@ const UserList = () => {
     };
 
     const [modalDeleteState, setModalDeleteState] = useState(false);
-    const [userIdState, setUserIdState] = useState("");
+    const [collectionIdState, setcollectionIdState] = useState("");
     const toggleModalDelete = (dataId) => {
         setModalDeleteState(!modalDeleteState);
-        setUserIdState(dataId);
+        setcollectionIdState(dataId);
     };
 
     const [modalState, setModalState] = useState(false);
@@ -60,8 +60,8 @@ const UserList = () => {
         window.location.reload(false);
     };
 
-    const deleteUser = async (userId) => {
-        await axios.delete(`http://localhost:5000/users/${userId}`);
+    const deleteCollection = async (collectionId) => {
+        await axios.delete(`http://localhost:5000/collections/${collectionId}`);
         
         toggleModalDelete();
         toggleModal();
@@ -76,7 +76,7 @@ const UserList = () => {
                 {
                     extend: 'excelHtml5',
                     // eslint-disable-next-line no-useless-concat
-                    title: date+'_'+'Data User Sistem Archiving Balai Pustaka',
+                    title: date+'_'+'Data Koleksi Sistem Archiving Balai Pustaka',
                     className: 'button is-small',
                     exportOptions: {
                         columns: ':visible'
@@ -85,7 +85,7 @@ const UserList = () => {
                 {
                     extend: 'pdfHtml5',
                     // eslint-disable-next-line no-useless-concat
-                    title: date+'_'+'Data User Sistem Archiving Balai Pustaka',
+                    title: date+'_'+'Data Koleksi Sistem Archiving Balai Pustaka',
                     className: 'button is-small',
                     exportOptions: {
                         columns: ':visible'
@@ -94,7 +94,7 @@ const UserList = () => {
                 {
                     extend: 'print',
                     // eslint-disable-next-line no-useless-concat
-                    title: 'Data User Sistem Archiving Balai Pustaka',
+                    title: 'Data Koleksi Sistem Archiving Balai Pustaka',
                     className: 'button is-small',
                     exportOptions: {
                         columns: ':visible'
@@ -120,33 +120,54 @@ const UserList = () => {
   return (
     <div>
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data Berhasil Dihapus"}  />
-        <h1 className='title has-text-centered mt-3'>Users</h1>
-        <h2 className='subtitle has-text-centered'>List of Users</h2>
+        <h1 className='title has-text-centered mt-3'>Collections</h1>
+        <h2 className='subtitle has-text-centered'>List of Collections</h2>
         
         <div className="buttons is-right">
-            <Link to={"/users/add"} className='button is-primary mb-2'>Tambah</Link>
+            <Link to={"/collections/add"} className='button is-primary mb-2'>Tambah</Link>
         </div>
         <table id='datatable' className='table is-striped' style={{minWidth: "100%"}}>
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Nama</th>
-                    <th>Email</th>
-                    <th>Role</th>
+                    <th>No BP</th>
+                    <th>ISBN</th>
+                    <th>Judul</th>
+                    <th>Penulis</th>
+                    <th>Tahun Cetakan Pertama</th>
+                    <th>Tahun Cetakan Terakhir</th>
+                    <th>Jumlah Cetakan</th>
+                    <th>Kategori</th>
+                    <th>Jenis Cerita</th>
+                    <th>Bahasa</th>
+                    <th>Data Digital</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-               {users.map((user, index) => (
-                <tr key={user.uuid}>
+               {collections.map((collection, index) => (
+                <tr key={collection.uuid}>
                     <td>{index + 1}</td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.role}</td>
+                    <td>{collection.no_bp}</td>
+                    <td>{collection.isbn}</td>
+                    <td>{collection.title}</td>
+                    <td>{collection.writer}</td>
+                    <td>{collection.publish_1st_year}</td>
+                    <td>{collection.publish_last_year}</td>
+                    <td>{collection.amount_printed}</td>
+                    <td>{collection.category.category}</td>
+                    <td>{collection.story_type.story_type}</td>
+                    <td>{collection.language.language}</td>
+                    <td>{collection.digital_collections.map((data, index) => (
+                        <p> - {data.digital_datum.digital_format.digital_format} <br /></p>
+                    )
+                    )}
+                    </td>
+                    
                     <td>
-                        <Link to={`/users/edit/${user.uuid}`} className='button bulma is-small is-rounded is-warning mr-2'> Edit</Link>
-                        <button onClick={() => toggleModalDelete(user.uuid) } className='button bulma is-small is-rounded is-danger'> Delete</button>
-                        <DeleteConfirmation confirmModal={deleteUser} hideModal={toggleModalDelete} modalState={modalDeleteState} dataId={userIdState}  />
+                        <Link to={`/collections/edit/${collection.uuid}`} className='button bulma is-small is-rounded is-warning mr-2'> Edit</Link>
+                        <button onClick={() => toggleModalDelete(collection.uuid) } className='button bulma is-small is-rounded is-danger'> Delete</button>
+                        <DeleteConfirmation confirmModal={deleteCollection} hideModal={toggleModalDelete} modalState={modalDeleteState} dataId={collectionIdState}  />
                     </td>
                 </tr>
                ))}
@@ -156,4 +177,4 @@ const UserList = () => {
   )
 }
 
-export default UserList
+export default CollectionList

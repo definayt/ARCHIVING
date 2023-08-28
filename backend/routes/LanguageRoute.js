@@ -7,14 +7,14 @@ import {
     updateLanguage,
     deleteLanguage
 } from "../controllers/Language.js";
-import { verifyUser, superAdminOnly } from "../middleware/AuthUser.js";
+import { verifyUser, pustakawanAndSuperAdminOnly } from "../middleware/AuthUser.js";
 
 const router = express.Router();
 
-router.get('/languages', verifyUser, superAdminOnly, getLanguages);
-router.get('/languages/:id', verifyUser, superAdminOnly, getLanguageById);
-router.post('/languages', verifyUser, superAdminOnly, createLanguage);
-router.patch('/languages/:id', verifyUser, superAdminOnly, updateLanguage);
-router.delete('/languages/:id', verifyUser, superAdminOnly, deleteLanguage);
+router.get('/languages', verifyUser, pustakawanAndSuperAdminOnly, getLanguages);
+router.get('/languages/:id', verifyUser, pustakawanAndSuperAdminOnly, getLanguageById);
+router.post('/languages', verifyUser, pustakawanAndSuperAdminOnly, createLanguage);
+router.patch('/languages/:id', verifyUser, pustakawanAndSuperAdminOnly, updateLanguage);
+router.delete('/languages/:id', verifyUser, pustakawanAndSuperAdminOnly, deleteLanguage);
 
 export default router;

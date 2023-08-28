@@ -3,7 +3,7 @@ import {NavLink, useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { LogOut, reset } from "../features/authSlice";
 import LogoutConfirmation from "./LogoutConfirmation";
-import {IoPerson, IoHome, IoLogOut, IoBook, IoDocumentAttach,IoBookmark} from "react-icons/io5";
+import {IoPerson, IoHome, IoBook, IoDocumentAttach,IoBookmark} from "react-icons/io5";
 import logo from "../assets/img/logo-BP.png";
 
 const Navbar = () => {
@@ -46,19 +46,41 @@ const Navbar = () => {
           </div>
         
           <div id="navbarBasicExample" className={`navbar-menu ${isActive ? "is-active" : ""}`}>
-            <div className='navbar-start'>
-              <div className='navbar-item is-hidden-tablet'>
+            <div className='navbar-start is-hidden-tablet'>  
+              <div className='navbar-item'>
                 <NavLink to={"/dashboard"}> <IoHome/> Dashboard</NavLink>
               </div>
-              <div className='navbar-item is-hidden-tablet'>
+              <div className='navbar-item '>
                 <NavLink to={"/collections"}> <IoBook/> Data Koleksi</NavLink>
               </div>
-              <div className='navbar-item is-hidden-tablet'>
+              <div className='navbar-item'>
                 <NavLink to={"/digital-data"}> <IoDocumentAttach/> Data Digital</NavLink>
               </div>
+              <hr />
               {user && user.role === "super-admin" && (
-                <div className='navbar-item is-hidden-tablet'>
-                  <NavLink to={"/users"}> <IoPerson/> Data User</NavLink>
+                <div>
+                  <div className='navbar-item'>
+                    <NavLink to={"/users"}> <IoPerson/> Data User</NavLink>
+                  </div>
+                  <hr />
+                </div>
+              )}
+              
+              {user && (user.role === "super-admin" || user.role === "pustakawan") && (
+                <div>
+                  <div className='navbar-item'>
+                    <NavLink to={"/categories"}> <IoBookmark/> Kategori</NavLink>
+                  </div>
+                  <div className='navbar-item'>
+                    <NavLink to={"/story-types"}> <IoBookmark/> Jenis Cerita</NavLink>
+                  </div>
+                  <div className='navbar-item'>
+                    <NavLink to={"/languages"}> <IoBookmark/> Bahasa</NavLink>
+                  </div>
+                  <div className='navbar-item'>
+                    <NavLink to={"/digital-format"}> <IoBookmark/> Format Digital</NavLink>
+                  </div>
+                  <hr />
                 </div>
               )}
             </div>

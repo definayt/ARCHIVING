@@ -224,7 +224,7 @@ export const updateCollection = async(req, res) => {
         }
         await Promise.allSettled(promises); 
         await trans.commit();
-        res.status(200).json({msg: "Kategori berhasil diubah"});
+        res.status(200).json({msg: "Koleksi berhasil diubah"});
     } catch(error){
         await trans.rollback();
         res.status(400).json({msg: error.message});
@@ -251,7 +251,7 @@ export const deleteCollection = async(req, res) => {
             }
         }, { transaction: trans });
         await trans.commit();
-        res.status(200).json({msg: "Kategori berhasil dihapus"});
+        res.status(200).json({msg: "Koleksi berhasil dihapus"});
     } catch(error){
         await trans.rollback();
         res.status(400).json({msg: error.message});
