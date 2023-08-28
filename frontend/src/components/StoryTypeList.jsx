@@ -120,8 +120,8 @@ const StoryTypeList = () => {
   return (
     <div>
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data Berhasil Dihapus"}  />
-        <h1 className='title has-text-centered mt-3'>Story Types</h1>
-        <h2 className='subtitle has-text-centered'>List of Story Types</h2>
+        <h1 className='title has-text-centered mt-3'>Jenis Cerita</h1>
+        <h2 className='subtitle has-text-centered'>Daftar Jenis Cerita</h2>
         
         <div className="buttons is-right">
             <Link to={"/story-types/add"} className='button is-primary mb-2'>Tambah</Link>
@@ -132,7 +132,7 @@ const StoryTypeList = () => {
                     <th>No</th>
                     <th>Kode</th>
                     <th>Jenis Cerita</th>
-                    <th>Action</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>

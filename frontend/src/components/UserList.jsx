@@ -120,8 +120,8 @@ const UserList = () => {
   return (
     <div>
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data Berhasil Dihapus"}  />
-        <h1 className='title has-text-centered mt-3'>Users</h1>
-        <h2 className='subtitle has-text-centered'>List of Users</h2>
+        <h1 className='title has-text-centered mt-3'>Pengguna</h1>
+        <h2 className='subtitle has-text-centered'>Daftar Pengguna</h2>
         
         <div className="buttons is-right">
             <Link to={"/users/add"} className='button is-primary mb-2'>Tambah</Link>
@@ -133,7 +133,7 @@ const UserList = () => {
                     <th>Nama</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th>Action</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>

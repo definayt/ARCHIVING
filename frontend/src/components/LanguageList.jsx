@@ -120,8 +120,8 @@ const LanguageList = () => {
   return (
     <div>
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data Berhasil Dihapus"}  />
-        <h1 className='title has-text-centered mt-3'>Languages</h1>
-        <h2 className='subtitle has-text-centered'>List of Languages</h2>
+        <h1 className='title has-text-centered mt-3'>Bahasa</h1>
+        <h2 className='subtitle has-text-centered'>Daftar Bahasa</h2>
         
         <div className="buttons is-right">
             <Link to={"/languages/add"} className='button is-primary mb-2'>Tambah</Link>
@@ -131,7 +131,7 @@ const LanguageList = () => {
                 <tr>
                     <th>No</th>
                     <th>Bahasa</th>
-                    <th>Action</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>

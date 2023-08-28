@@ -121,7 +121,7 @@ const DigitalDataList = () => {
     <div>
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data Berhasil Dihapus"}  />
         <h1 className='title has-text-centered mt-3'>Data Digital</h1>
-        <h2 className='subtitle has-text-centered'>List of Data Digital</h2>
+        <h2 className='subtitle has-text-centered'>Daftar Data Digital</h2>
         
         <div className="buttons is-right">
             <Link to={"/data-digital/add"} className='button is-primary mb-2'>Tambah</Link>
@@ -133,7 +133,7 @@ const DigitalDataList = () => {
                     <th>Judul</th>
                     <th>Bentuk Digital</th>
                     <th>File Digital</th>
-                    <th>Action</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>

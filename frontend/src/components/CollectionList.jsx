@@ -120,8 +120,8 @@ const CollectionList = () => {
   return (
     <div>
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data Berhasil Dihapus"}  />
-        <h1 className='title has-text-centered mt-3'>Collections</h1>
-        <h2 className='subtitle has-text-centered'>List of Collections</h2>
+        <h1 className='title has-text-centered mt-3'>Koleksi</h1>
+        <h2 className='subtitle has-text-centered'>Daftar Koleksi</h2>
         
         <div className="buttons is-right">
             <Link to={"/collections/add"} className='button is-primary mb-2'>Tambah</Link>
@@ -141,7 +141,7 @@ const CollectionList = () => {
                     <th>Jenis Cerita</th>
                     <th>Bahasa</th>
                     <th>Data Digital</th>
-                    <th>Action</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>

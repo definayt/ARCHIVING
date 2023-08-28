@@ -120,8 +120,8 @@ const DigitalFormatList = () => {
   return (
     <div>
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data Berhasil Dihapus"}  />
-        <h1 className='title has-text-centered mt-3'>Digital Format</h1>
-        <h2 className='subtitle has-text-centered'>List of Digital Format</h2>
+        <h1 className='title has-text-centered mt-3'>Format Digital</h1>
+        <h2 className='subtitle has-text-centered'>Daftar Format Digital</h2>
         
         <div className="buttons is-right">
             <Link to={"/digital-format/add"} className='button is-primary mb-2'>Tambah</Link>
@@ -131,7 +131,7 @@ const DigitalFormatList = () => {
                 <tr>
                     <th>No</th>
                     <th>Digital Format</th>
-                    <th>Action</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>

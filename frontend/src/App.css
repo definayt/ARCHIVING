@@ -1,0 +1,13 @@
+.pie{
+    max-height: 350px;
+}
+/* @media only screen and (max-width: 768px) {
+    .pie{
+        max-height: 200px;
+    }
+}
+@media only screen and (max-width: 425px) {
+    .pie{
+        max-height: 100px;
+    }
+} */

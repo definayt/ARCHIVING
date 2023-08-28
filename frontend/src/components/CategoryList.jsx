@@ -120,8 +120,8 @@ const CategoryList = () => {
   return (
     <div>
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data Berhasil Dihapus"}  />
-        <h1 className='title has-text-centered mt-3'>Category</h1>
-        <h2 className='subtitle has-text-centered'>List of Categories</h2>
+        <h1 className='title has-text-centered mt-3'>Kategori</h1>
+        <h2 className='subtitle has-text-centered'>Daftar Kategori</h2>
         
         <div className="buttons is-right">
             <Link to={"/categories/add"} className='button is-primary mb-2'>Tambah</Link>
@@ -132,7 +132,7 @@ const CategoryList = () => {
                     <th>No</th>
                     <th>Kode</th>
                     <th>Kategori</th>
-                    <th>Action</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>

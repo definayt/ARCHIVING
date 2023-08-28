@@ -41,7 +41,7 @@ POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-    "email" : "yasmin@gmail.com",
+    "email" : "superadmin@gmail.com",
     "password" : "123456"
 }
 
@@ -227,6 +227,7 @@ Content-Type: application/json
 //delete collection
 DELETE http://localhost:5000/collections/b2d98c41-03d9-48a8-9979-ed9bfc51dec2
 
+
 ###
 //Create digital data
 POST http://localhost:5000/digital-data
@@ -260,3 +261,7 @@ Content-Type: application/json
 ###
 //delete digital data
 DELETE http://localhost:5000/digital-data/3f9c21e0-8fd5-49cd-b601-b832b94a1db9
+
+###
+//export digital data
+POST http://localhost:5000/digital-data/export
