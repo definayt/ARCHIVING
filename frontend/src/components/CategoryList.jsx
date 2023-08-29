@@ -60,8 +60,8 @@ const CategoryList = () => {
         window.location.reload(false);
     };
 
-    const deleteCategory = async (digitalDataId) => {
-        await axios.delete(`http://localhost:5000/collections/${digitalDataId}`);
+    const deleteCategory = async (categoryId) => {
+        await axios.delete(`http://localhost:5000/categories/${categoryId}`);
         
         toggleModalDelete();
         toggleModal();
@@ -76,7 +76,7 @@ const CategoryList = () => {
                 {
                     extend: 'excelHtml5',
                     // eslint-disable-next-line no-useless-concat
-                    title: date+'_'+'Data Digital Sistem Archiving Balai Pustaka',
+                    title: date+'_'+'Data Kategori Sistem Archiving Balai Pustaka',
                     className: 'button is-small',
                     exportOptions: {
                         columns: ':visible'

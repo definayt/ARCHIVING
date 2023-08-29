@@ -52,8 +52,8 @@ const FormAddUser = () => {
   return (
     <div>
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data berhasil ditambahkan."}  />
-        <h1 className='title has-text-centered mt-3'>Users</h1>
-        <h2 className='subtitle has-text-centered'>Add User</h2>
+        <h1 className='title has-text-centered mt-3'>User</h1>
+        <h2 className='subtitle has-text-centered'>Tambah User</h2>
         <div className="card">
             <div className="card-content">
                 <div className="content">

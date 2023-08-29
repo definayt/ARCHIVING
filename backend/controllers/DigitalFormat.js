@@ -3,7 +3,7 @@ import DigitalFormat from "../models/DigitalFormatModel.js";
 export const getDigitalFormats = async(req, res) => {
     try{
         const response = await DigitalFormat.findAll({
-            attributes: ['uuid', 'digital_format']
+            // attributes: ['uuid', 'digital_format']
         });
         res.status(200).json(response);
     } catch(error){

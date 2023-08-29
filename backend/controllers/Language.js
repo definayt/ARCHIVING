@@ -3,7 +3,7 @@ import Language from "../models/LanguageModel.js";
 export const getLanguages = async(req, res) => {
     try{
         const response = await Language.findAll({
-            attributes: ['uuid', 'language']
+            attributes: ['id','uuid', 'language']
         });
         res.status(200).json(response);
     } catch(error){

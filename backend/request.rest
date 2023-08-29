@@ -122,7 +122,7 @@ Content-Type: application/json
 
 {
     "code" : "NYC",
-    "story_type" : "Belum Terkategori"
+    "story_type" : "Belum Terkategorii"
 }
 
 ###
@@ -135,12 +135,12 @@ GET http://localhost:5000/story-types/91e586cf-8d09-4ba4-8f14-b4b562038df4
 
 ###
 //update story type
-PATCH  http://localhost:5000/story-types/92279f82-a827-436f-ad42-25e5ea63952b
+PATCH  http://localhost:5000/story-types/20f5154d-95d2-43fa-bad6-e34544393894
 Content-Type: application/json
 
 {
     "code" : "NYC",
-    "story_type": "Belum Terkategori"
+    "story_type": "Belum Terkategoori"
 }
 
 ###
@@ -176,6 +176,11 @@ Content-Type: application/json
 ###
 //delete digital format
 DELETE http://localhost:5000/digital-format/62a0d502-edda-4feb-8171-5fac8c43bb15
+
+###
+//get All digital format select
+GET http://localhost:5000/digital-format/select
+
 
 ###
 //Create collection

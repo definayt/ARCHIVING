@@ -3,7 +3,7 @@ import StoryType from "../models/StoryTypeModel.js";
 export const getStoryTypes = async(req, res) => {
     try{
         const response = await StoryType.findAll({
-            attributes: ['uuid', 'code', 'story_type']
+            attributes: ['id','uuid', 'code', 'story_type']
         });
         res.status(200).json(response);
     } catch(error){

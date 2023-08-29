@@ -61,7 +61,7 @@ const DigitalDataList = () => {
     };
 
     const deleteDigitalData = async (digitalDataId) => {
-        await axios.delete(`http://localhost:5000/collections/${digitalDataId}`);
+        await axios.delete(`http://localhost:5000/digital-data/${digitalDataId}`);
         
         toggleModalDelete();
         toggleModal();
@@ -124,7 +124,7 @@ const DigitalDataList = () => {
         <h2 className='subtitle has-text-centered'>Daftar Data Digital</h2>
         
         <div className="buttons is-right">
-            <Link to={"/data-digital/add"} className='button is-primary mb-2'>Tambah</Link>
+            <Link to={"/digital-data/add"} className='button is-primary mb-2'>Tambah</Link>
         </div>
         <table id='datatable' className='table is-striped' style={{minWidth: "100%"}}>
             <thead>
@@ -144,7 +144,7 @@ const DigitalDataList = () => {
                     <td>{digitalDatum.digital_format.digital_format}</td>
                     {/* <td>{digitalDatum.file_digital}</td> */}
                     <td>
-                        <Link to={`/data-digital/edit/${digitalDatum.uuid}`} className='button bulma is-small is-rounded is-warning mr-2'> Edit</Link>
+                        <Link to={`/digital-data/edit/${digitalDatum.uuid}`} className='button bulma is-small is-rounded is-warning mr-2'> Edit</Link>
                         <button onClick={() => toggleModalDelete(digitalDatum.uuid) } className='button bulma is-small is-rounded is-danger'> Delete</button>
                         <DeleteConfirmation confirmModal={deleteDigitalData} hideModal={toggleModalDelete} modalState={modalDeleteState} dataId={digitalDataIdState}  />
                     </td>

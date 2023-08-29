@@ -21,7 +21,7 @@ export const getDigitalDatas = async(req, res) => {
 export const getDigitalDataById = async(req, res) => {
     try{
         const response = await DigitalData.findOne({
-            attributes: ['uuid', 'title', 'file_digital'],
+            attributes: ['uuid', 'title', 'file_digital', 'digitalFormatId'],
             include:[
                 { model: DigitalFormat, attributes: ['digital_format'] }, 
                 { model: Users, attributes: ['name'] }, 
@@ -37,7 +37,7 @@ export const getDigitalDataById = async(req, res) => {
 }
 
 export const createDigitalData = async(req, res) => {
-    const {title, file_digital, digitalFormatId, userId} = req.body;
+    const {title, file_digital, digitalFormatId} = req.body;
     try{
         await DigitalData.create({
             title: title,

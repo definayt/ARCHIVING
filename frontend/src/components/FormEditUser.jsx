@@ -79,8 +79,8 @@ const FormEditUser = () => {
             <div className="card-content">
                 <div className="content">
                     <form onSubmit={updateUser}>
-                        <article class="message is-danger" style={{display: showMessageError ? 'block' : 'none' }}>
-                            <div class="message-body">
+                        <article className="message is-danger" style={{display: showMessageError ? 'block' : 'none' }}>
+                            <div className="message-body">
                             {msg}
                             </div>
                         </article>
