@@ -109,7 +109,7 @@ const DigitalDataList = () => {
             columnDefs: [ {
                 // targets: -1,
                 // visible: false
-            } ]
+            } ],
         });
     } 
     $(document).ready(function () {
@@ -130,9 +130,9 @@ const DigitalDataList = () => {
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Judul</th>
+                    <th style={{maxWidth: "40%"}}>Judul</th>
                     <th>Bentuk Digital</th>
-                    <th>File Digital</th>
+                    {/* <th>File Digital</th> */}
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -142,7 +142,7 @@ const DigitalDataList = () => {
                     <td>{index + 1}</td>
                     <td>{digitalDatum.title}</td>
                     <td>{digitalDatum.digital_format.digital_format}</td>
-                    <td>{digitalDatum.file_digital}</td>
+                    {/* <td>{digitalDatum.file_digital}</td> */}
                     <td>
                         <Link to={`/data-digital/edit/${digitalDatum.uuid}`} className='button bulma is-small is-rounded is-warning mr-2'> Edit</Link>
                         <button onClick={() => toggleModalDelete(digitalDatum.uuid) } className='button bulma is-small is-rounded is-danger'> Delete</button>

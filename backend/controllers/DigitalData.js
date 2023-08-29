@@ -1,6 +1,7 @@
 import DigitalData from "../models/DigitalDataModel.js";
 import DigitalFormat from "../models/DigitalFormatModel.js";
 import Users from "../models/UserModel.js";
+import xlsx from "xlsx";
 
 export const getDigitalDatas = async(req, res) => {
     try{
@@ -92,4 +93,28 @@ export const deleteDigitalData = async(req, res) => {
     } catch(error){
         res.status(400).json({msg: error.message});
     }
+}
+
+export const readExcel = (req, res) => {
+    try {
+        const workbook = xlsx.readFile('./digital_data.xlsx');  // Step 2
+        let workbook_sheet = workbook.SheetNames;                // Step 3
+        let workbook_response = xlsx.utils.sheet_to_json(        // Step 4
+            workbook.Sheets[workbook_sheet[0]]
+        );
+        DigitalData.bulkCreate(workbook_response)
+            .then(() => {
+            res.status(200).json({
+                msg: "Import Success",
+            });
+            })
+            .catch((error) => {
+            res.status(500).json({
+                msg: error.message
+            });
+            }); 
+    } catch (error) {
+        res.status(400).json({msg: error.message});
+    }
+    
 }

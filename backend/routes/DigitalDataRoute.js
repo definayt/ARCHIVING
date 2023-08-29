@@ -5,7 +5,8 @@ import {
     getDigitalDataById,
     createDigitalData,
     updateDigitalData,
-    deleteDigitalData
+    deleteDigitalData,
+    readExcel
 } from "../controllers/DigitalData.js";
 import { verifyUser, pustakawanAndSuperAdminOnly } from "../middleware/AuthUser.js";
 
@@ -16,5 +17,6 @@ router.get('/digital-data/:id', verifyUser, getDigitalDataById);
 router.post('/digital-data', verifyUser, pustakawanAndSuperAdminOnly, createDigitalData);
 router.patch('/digital-data/:id', verifyUser, pustakawanAndSuperAdminOnly, updateDigitalData);
 router.delete('/digital-data/:id', verifyUser, pustakawanAndSuperAdminOnly, deleteDigitalData);
+router.post('/digital-data/excel', verifyUser, pustakawanAndSuperAdminOnly, readExcel)
 
 export default router;

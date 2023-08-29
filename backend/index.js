@@ -15,7 +15,6 @@ import AuthRoute from "./routes/AuthRoute.js";
 dotenv.config();
 
 const app = express();
-
 const sessionStore = SequelizeStore(session.Store);
 
 const store = new sessionStore({

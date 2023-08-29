@@ -221,7 +221,7 @@ Content-Type: application/json
     "categoryId" : 1, 
     "storyTypeId" : 2,
     "languageId" : 1,
-    "digitalDataId" : [1,2]
+    "digitalDataId" : []
 }
 ###
 //delete collection
@@ -264,4 +264,4 @@ DELETE http://localhost:5000/digital-data/3f9c21e0-8fd5-49cd-b601-b832b94a1db9
 
 ###
 //export digital data
-POST http://localhost:5000/digital-data/export
+POST http://localhost:5000/digital-data/excel
