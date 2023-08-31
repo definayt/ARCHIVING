@@ -34,7 +34,9 @@ export const getCollections = async(req, res) => {
                              }
                         ]
                      },
-                ]
+                ],
+                limit: 20,
+                subQuery: false
             });
             res.status(200).json(response);
         }else{

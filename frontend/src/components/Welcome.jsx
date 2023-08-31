@@ -73,7 +73,7 @@ const Welcome = () => {
             <h3 className='subtitle has-text-centered'>Total Koleksi <strong>{collections.length}</strong> Judul</h3>
             <ResponsivePie
               data={data}
-              margin={{ top: 0, right: 80, bottom: 150, left: 80 }}
+              margin={{ top: 40, right: 80, bottom: 150, left: 80 }}
               innerRadius={0.5}
               padAngle={0.7}
               cornerRadius={3}
