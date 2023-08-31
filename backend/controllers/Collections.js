@@ -7,13 +7,13 @@ import DigitalCollections from "../models/DigitalCollectionModel.js";
 import db from "../config/Database.js";
 import DigitalData from "../models/DigitalDataModel.js";
 import DigitalFormat from "../models/DigitalFormatModel.js";
+import xlsx from "xlsx";
 
 export const getCollections = async(req, res) => {
     try {
         // reqnya dari middleware
-        let response;
         if(req.role === "guest"){
-            response = await Collections.findAll({
+            const response = await Collections.findAll({
                 attributes: ['uuid', 'no_bp', 'isbn', 'title', 'writer', 'publish_1st_year', 
                         'publish_last_year', 'amount_printed', 'synopsis'
                     ],
@@ -36,8 +36,9 @@ export const getCollections = async(req, res) => {
                      },
                 ]
             });
+            res.status(200).json(response);
         }else{
-            response = await Collections.findAll({
+            const response = await Collections.findAll({
                 attributes: ['uuid', 'no_bp', 'isbn', 'title', 'writer', 'publish_1st_year', 
                         'publish_last_year', 'amount_printed', 'synopsis'
                     ],
@@ -71,11 +72,10 @@ export const getCollections = async(req, res) => {
 export const getCollectionById = async(req, res) => {
     try {
         // req.role nya dari middleware
-        let response;
         if(req.role === "guest"){
-            response = await Collections.findOne({
+            const response = await Collections.findOne({
                 attributes: ['uuid', 'no_bp', 'isbn', 'title', 'writer', 'publish_1st_year', 
-                        'publish_last_year', 'amount_printed', 'synopsis'
+                        'publish_last_year', 'amount_printed', 'synopsis', 'categoryId', 'storyTypeId', 'languageId'
                     ],
                 where: {
                     uuid: req.params.id
@@ -86,7 +86,7 @@ export const getCollectionById = async(req, res) => {
                     { model: Languages, attributes: ['language'] },  
                     { 
                         model: DigitalCollections, 
-                        attributes: ['uuid'], 
+                        attributes: ['uuid', 'digitalDataId'], 
                         include: [
                             { 
                                 model: DigitalData, 
@@ -99,10 +99,11 @@ export const getCollectionById = async(req, res) => {
                      }, 
                 ]
             });
+            res.status(200).json(response);
         }else{
-            response = await Collections.findAll({
+            const response = await Collections.findOne({
                 attributes: ['uuid', 'no_bp', 'isbn', 'title', 'writer', 'publish_1st_year', 
-                        'publish_last_year', 'amount_printed', 'synopsis'
+                        'publish_last_year', 'amount_printed', 'synopsis', 'categoryId', 'storyTypeId', 'languageId'
                     ],
                 where: {
                     uuid: req.params.id
@@ -114,7 +115,7 @@ export const getCollectionById = async(req, res) => {
                     { model: Users, attributes: ['name'] }, 
                     { 
                         model: DigitalCollections, 
-                        attributes: ['uuid'], 
+                        attributes: ['uuid', 'digitalDataId'], 
                         include: [
                             { 
                                 model: DigitalData, 
@@ -256,4 +257,27 @@ export const deleteCollection = async(req, res) => {
         await trans.rollback();
         res.status(400).json({msg: error.message});
     }
+}
+
+export const readExcel = async(req, res) => {
+    try {
+        const workbook = xlsx.readFile('./Arsip_IP_Buku.xlsx');  // Step 2
+        let workbook_sheet = workbook.SheetNames;                // Step 3
+        let workbook_response = xlsx.utils.sheet_to_json(        // Step 4
+            workbook.Sheets[workbook_sheet[0]]
+        );
+       
+        Collections.bulkCreate(workbook_response)
+            .then(() => {
+                res.status(200).json({msg: "Import Success"});
+            })
+            .catch((error) => {
+            res.status(500).json({
+                msg: error.message
+            });
+            }); 
+    } catch (error) {
+        res.status(400).json({msg: error.message});
+    }
+    
 }

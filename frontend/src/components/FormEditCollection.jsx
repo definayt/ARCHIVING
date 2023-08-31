@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
-import Select from 'react-select';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import SuccessModal from './SuccessModal';
+import Select from 'react-select';
 import RRMultiSelect from 'rr-multi-select';
 import InputMask from "react-input-mask";
 
-const FormAddCollection = () => {
+const FormEditCategory = () => {
     const [no_bp, setNoBP] = useState("");
     const [isbn, setISBN] = useState("");
     const [title, setTitle] = useState("");
@@ -25,6 +25,7 @@ const FormAddCollection = () => {
     const [msg, setMsg] = useState("");
     const [showMessageError, setShowMessageError] = useState(false);
     const navigate = useNavigate();
+    const {id} = useParams();
 
     const [modalState, setModalState] = useState(false);
     
@@ -35,6 +36,60 @@ const FormAddCollection = () => {
         navigate("/collections");
     };
 
+    useEffect(()=>{
+        getCategories();
+        getStoryTypes();
+        getLanguages();
+        getDigitalData();
+    }, []);
+
+    useEffect(() => {
+        const getCollectionById = async () => {
+            try {
+                showSpinner();
+                const response = await axios.get(`http://localhost:5000/collections/${id}`);
+                setNoBP(response.data.no_bp);
+                setISBN(response.data.isbn);
+                setTitle(response.data.title);
+                setWriter(response.data.writer);
+                setPublish1stYear(response.data.publish_1st_year);
+                setPublishLastYear(response.data.publish_last_year);
+                setAmountPrinted(response.data.amount_printed);
+                categoryOptions.forEach(element => {
+                    if(element.value === response.data.categoryId){
+                        setCategory(element);
+                    }
+                });
+                storyTypeOptions.forEach(element => {
+                    if(element.value === response.data.storyTypeId){
+                        setStoryType(element);
+                    }
+                });
+                languageOptions.forEach(element => {
+                    if(element.value === response.data.languageId){
+                        setLanguage(element);
+                    }
+                });
+                let array_data = [];
+                digitalDataOptions.forEach(element => {
+                    response.data.digital_collections.forEach(e => {
+                        if(element.value === e.digitalDataId){
+                            array_data.push(element);
+                        }
+                    });
+                });
+                setDigitalData(array_data);
+            } catch (error) {
+                if(error.response){
+                    setMsg(error.response.data.msg);
+                }
+            }finally {
+                hideSpinner();
+            }
+        };
+        getCollectionById();
+    }, [id, categoryOptions, storyTypeOptions, languageOptions, digitalDataOptions]);
+
     function replaceCharacter(string, index, replacement) {
         return (
           string.slice(0, index) +
@@ -42,8 +97,8 @@ const FormAddCollection = () => {
           string.slice(index + replacement.length)
         );
       }
-
-    const saveCollection = async (e) => {
+    
+    const updateCollection = async (e) => {
         e.preventDefault();
         try {
             let digitalDataId = [];
@@ -60,7 +115,7 @@ const FormAddCollection = () => {
                 isbn_remove = replaceCharacter(isbn_remove, 14, " ");
                 isbn_remove = replaceCharacter(isbn_remove, 13, " ");
             }
-            await axios.post("http://localhost:5000/collections", {
+            await axios.patch(`http://localhost:5000/collections/${id}`, {
                 no_bp: no_bp_remove,
                 isbn: isbn_remove,
                 title: title,
@@ -81,13 +136,6 @@ const FormAddCollection = () => {
             }
         }
     };
-
-    useEffect(()=>{
-        getCategories();
-        getStoryTypes();
-        getLanguages();
-        getDigitalData();
-    }, []);
 
     const getCategories = async () => {
         await axios.get('http://localhost:5000/categories')
@@ -181,16 +229,39 @@ const FormAddCollection = () => {
                 }
             });
     };
-    
+    const [display_value, setDisplayValue] = useState("none");
+    const [display_form, setDisplayForm] = useState("none");
+    function showSpinner() {
+        setDisplayValue("block");
+        setDisplayForm("none");
+    }
+      
+    function hideSpinner() {
+        setDisplayValue("none");
+        setDisplayForm("block");
+    }
+
+
   return (
     <div>
-        <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data berhasil ditambahkan."}  />
+        <div style={{display: display_value}} className='column is-fullWidth'>
+        <div className='equal-height'>
+            <div className='is-flex is-horizontal-center'>
+                <figure className='image is-64x64'>
+                <img alt='loading'  src="http://chimplyimage.appspot.com/images/samples/classic-spinner/animatedCircle.gif" />
+                    </figure>
+            </div>
+        </div>
+        </div>
+        <div style={{display: display_form}}>
+        <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data berhasil disimpan."}  />
+        <div></div>
         <h1 className='title has-text-centered mt-3'>Koleksi</h1>
-        <h2 className='subtitle has-text-centered'>Tambah Koleksi</h2>
+        <h2 className='subtitle has-text-centered'>Edit Koleksi</h2>
         <div className="card">
             <div className="card-content">
                 <div className="content">
-                    <form onSubmit={saveCollection}>
+                    <form onSubmit={updateCollection}>
                         <article className="message is-danger" style={{display: showMessageError ? 'block' : 'none' }}>
                             <div className="message-body">
                             {msg}
@@ -364,8 +435,9 @@ const FormAddCollection = () => {
                 </div>
             </div>
         </div>
+        </div>
     </div>
   )
 }
 
-export default FormAddCollection
+export default FormEditCategory

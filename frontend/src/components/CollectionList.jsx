@@ -126,7 +126,7 @@ const CollectionList = () => {
         <div className="buttons is-right">
             <Link to={"/collections/add"} className='button is-primary mb-2'>Tambah</Link>
         </div>
-        <table id='datatable' className='table is-striped' style={{minWidth: "100%"}}>
+        <table id='datatable' className='table is-striped' style={{fontSize: "12px"}}>
             <thead>
                 <tr>
                     <th>No</th>
@@ -141,7 +141,7 @@ const CollectionList = () => {
                     <th>Jenis Cerita</th>
                     <th>Bahasa</th>
                     <th>Data Digital</th>
-                    <th>Aksi</th>
+                    <th style={{minWidth: "130px"}}>Aksi</th>
                 </tr>
             </thead>
             <tbody>

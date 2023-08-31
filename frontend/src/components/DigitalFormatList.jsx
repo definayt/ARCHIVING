@@ -131,7 +131,7 @@ const DigitalFormatList = () => {
                 <tr>
                     <th>No</th>
                     <th>Digital Format</th>
-                    <th>Aksi</th>
+                    <th style={{minWidth: "130px"}}>Aksi</th>
                 </tr>
             </thead>
             <tbody>

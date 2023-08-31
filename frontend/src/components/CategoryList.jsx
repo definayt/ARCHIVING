@@ -132,7 +132,7 @@ const CategoryList = () => {
                     <th>No</th>
                     <th>Kode</th>
                     <th>Kategori</th>
-                    <th>Aksi</th>
+                    <th style={{minWidth: "130px"}}>Aksi</th>
                 </tr>
             </thead>
             <tbody>

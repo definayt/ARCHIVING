@@ -68,7 +68,7 @@ const FormEditDigitalData = () => {
         };
         getDigitalDataById();
         
-    }, [id]);
+    }, [id, digitalFormatOptions]);
     
     const updateDigitalData = async (e) => {
         e.preventDefault();

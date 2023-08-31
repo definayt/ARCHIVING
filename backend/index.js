@@ -11,6 +11,7 @@ import CategoryRoute from "./routes/CategoryRoute.js";
 import StoryTypeRoute from "./routes/StoryTypeRoute.js";
 import DigitalFormatRoute from "./routes/DigitalFormatRoute.js";
 import DigitalDataRoute from "./routes/DigitalDataRoute.js";
+import DigitalCollectionRoute from "./routes/DigitalCollectionRoute.js";
 import AuthRoute from "./routes/AuthRoute.js";
 dotenv.config();
 
@@ -50,6 +51,7 @@ app.use(StoryTypeRoute);
 app.use(DigitalFormatRoute);
 app.use(DigitalDataRoute);
 app.use(AuthRoute);
+app.use(DigitalCollectionRoute);
 
 // store.sync();
 

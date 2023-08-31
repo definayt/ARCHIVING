@@ -131,7 +131,7 @@ const LanguageList = () => {
                 <tr>
                     <th>No</th>
                     <th>Bahasa</th>
-                    <th>Aksi</th>
+                    <th style={{minWidth: "130px"}}>Aksi</th>
                 </tr>
             </thead>
             <tbody>

@@ -22,6 +22,7 @@ import EditStoryType from "./pages/EditStoryType";
 import AddDigitalData from "./pages/AddDigitalData";
 import EditDigitalData from "./pages/EditDigitalData";
 import AddCollection from "./pages/AddCollection";
+import EditCollection from "./pages/EditCollection";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="/users/edit/:id" element={<EditUser/>}/>
           <Route path="/collections" element={<Collections/>}/>
           <Route path="/collections/add" element={<AddCollection/>}/>
+          <Route path="/collections/edit/:id" element={<EditCollection/>} />
           <Route path="/digital-data" element={<DigitalData/>}/>
           <Route path="/digital-data/add" element={<AddDigitalData/>}/>
           <Route path="/digital-data/edit/:id" element={<EditDigitalData/>}/>

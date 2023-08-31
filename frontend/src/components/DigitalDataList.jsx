@@ -130,16 +130,18 @@ const DigitalDataList = () => {
             <thead>
                 <tr>
                     <th>No</th>
+                    <th>ID</th>
                     <th style={{maxWidth: "40%"}}>Judul</th>
                     <th>Bentuk Digital</th>
                     {/* <th>File Digital</th> */}
-                    <th>Aksi</th>
+                    <th style={{minWidth: "130px"}}>Aksi</th>
                 </tr>
             </thead>
             <tbody>
                {digitalData.map((digitalDatum, index) => (
                 <tr key={digitalDatum.uuid}>
                     <td>{index + 1}</td>
+                    <td>{digitalDatum.id}</td>
                     <td>{digitalDatum.title}</td>
                     <td>{digitalDatum.digital_format.digital_format}</td>
                     {/* <td>{digitalDatum.file_digital}</td> */}

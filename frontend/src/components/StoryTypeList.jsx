@@ -132,7 +132,7 @@ const StoryTypeList = () => {
                     <th>No</th>
                     <th>Kode</th>
                     <th>Jenis Cerita</th>
-                    <th>Aksi</th>
+                    <th style={{minWidth: "130px"}}>Aksi</th>
                 </tr>
             </thead>
             <tbody>

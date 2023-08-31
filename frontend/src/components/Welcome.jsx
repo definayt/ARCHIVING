@@ -8,25 +8,25 @@ import '../App.css';
 const Welcome = () => {
     const {user} = useSelector((state) => state.auth);
     const [collections, setCollections] = useState([]);
-    const [digitalData, setDigitalData] = useState([]);
+    const [digitalCollection, setDigitalCollections] = useState([]);
     useEffect(()=>{
       getCollections();
     }, []);
     useEffect(()=>{
-      getDigitalData();
+      getDigitalCollections();
     }, []);
     const navigate = useNavigate();
     const data = [
       { 
         "id" : "non-digital",
-        "label" : "Belum ada data digital",
-        "value" : collections.length,
+        "label" : "Belum ada koleksi digital",
+        "value" : collections.length - digitalCollection.length,
         "color" : "hsl(246, 70%, 50%)"
        },
       { 
         "id" : "digital",
-        "label" : "Sudah ada data digital",
-        "value" : digitalData.length,
+        "label" : "Sudah ada koleksi digital",
+        "value" : digitalCollection.length,
         "color" : "hsl(239, 70%, 50%)"
        },
     ];
@@ -48,10 +48,10 @@ const Welcome = () => {
         });
     };
 
-    const getDigitalData = async () => {
-      await axios.get('http://localhost:5000/digital-data')
+    const getDigitalCollections = async () => {
+      await axios.get('http://localhost:5000/digital-collections')
         .then((response) => {
-          setDigitalData(response.data);
+          setDigitalCollections(response.data);
         })
         .catch((error) => {
             // Error
@@ -70,7 +70,7 @@ const Welcome = () => {
         <h2 className='subtitle has-text-centered'>Welcome Back <strong>{user && user.name}</strong></h2>
         <div className='columns' style={{ height: '350px' }}>
           <div className='column is-half' style={{ height: '100%' }}>
-            <h3 className='subtitle has-text-centered'>Total Koleksi <strong>{collections.length}</strong></h3>
+            <h3 className='subtitle has-text-centered'>Total Koleksi <strong>{collections.length}</strong> Judul</h3>
             <ResponsivePie
               data={data}
               margin={{ top: 0, right: 80, bottom: 150, left: 80 }}

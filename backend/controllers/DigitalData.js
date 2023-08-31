@@ -6,7 +6,7 @@ import xlsx from "xlsx";
 export const getDigitalDatas = async(req, res) => {
     try{
         const response = await DigitalData.findAll({
-            attributes: ['uuid', 'title', 'file_digital'],
+            attributes: ['id','uuid', 'title', 'file_digital'],
             include:[
                 { model: DigitalFormat, attributes: ['digital_format'] }, 
                 { model: Users, attributes: ['name'] }, 
