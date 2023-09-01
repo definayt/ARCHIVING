@@ -24,6 +24,8 @@ import EditDigitalData from "./pages/EditDigitalData";
 import AddCollection from "./pages/AddCollection";
 import EditCollection from "./pages/EditCollection";
 
+import CollectionList from "./pages/CollectionList";
+
 function App() {
   return (
     <div>
@@ -53,6 +55,8 @@ function App() {
           <Route path="/digital-format" element={<DigitalFormat/>}/>
           <Route path="/digital-format/add" element={<AddDigitalFormat/>}/>
           <Route path="/digital-format/edit/:id" element={<EditDigitalFormat/>}/>
+
+          <Route exact path="/collection" element={<CollectionList/>} />
         </Routes>
       </BrowserRouter>
     </div>

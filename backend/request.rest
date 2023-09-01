@@ -181,7 +181,6 @@ DELETE http://localhost:5000/digital-format/62a0d502-edda-4feb-8171-5fac8c43bb15
 //get All digital format select
 GET http://localhost:5000/digital-format/select
 
-
 ###
 //Create collection
 POST http://localhost:5000/collections
@@ -235,6 +234,14 @@ DELETE http://localhost:5000/collections/b2d98c41-03d9-48a8-9979-ed9bfc51dec2
 ###
 //export collection
 POST http://localhost:5000/collections/excel
+
+###
+//get All Collection pagination
+GET http://localhost:5000/collection
+
+###
+//get All Collection
+GET http://localhost:5000/collection/published
 
 ###
 //export digital collection

@@ -8,6 +8,7 @@ import db from "../config/Database.js";
 import DigitalData from "../models/DigitalDataModel.js";
 import DigitalFormat from "../models/DigitalFormatModel.js";
 import xlsx from "xlsx";
+const Op = db.Sequelize.Op;
 
 export const getCollections = async(req, res) => {
     try {
@@ -283,3 +284,62 @@ export const readExcel = async(req, res) => {
     }
     
 }
+
+const getPagination = (page, size) => {
+  const limit = size ? +size : 10;
+  const offset = page ? page * limit : 0;
+
+  return { limit, offset };
+};
+
+const getPagingData = (data, page, limit) => {
+    const { count: totalItems, rows: collection } = data;
+    const currentPage = page ? +page : 0;
+    const totalPages = Math.ceil(totalItems / limit);
+  
+    return { totalItems, collection, totalPages, currentPage };
+  };
+
+  export const findAllCollection = (req, res) => {
+    const { page, size, title } = req.query;
+    var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+  
+    const { limit, offset } = getPagination(page, size);
+  
+    Collections.findAndCountAll({ 
+        where: condition, 
+        limit, 
+        offset,
+        attributes: ['uuid', 'no_bp', 'isbn', 'title', 'writer', 'publish_1st_year', 
+                        'publish_last_year', 'amount_printed', 'synopsis'
+                    ],
+        include:[
+            { model: Categories, attributes: ['category'] }, 
+            { model: StoryType, attributes: ['story_type'] }, 
+            { model: Languages, attributes: ['language'] },  
+            { 
+                model: DigitalCollections, 
+                attributes: ['uuid'], 
+                include: [
+                    { 
+                        model: DigitalData, 
+                        attributes: ['file_digital'],
+                        include: [
+                            { model: DigitalFormat, attributes: ['digital_format'] }
+                        ]
+                        }
+                ]
+                },
+        ],
+    })
+      .then(data => {
+        const response = getPagingData(data, page, limit);
+        res.send(response);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving collection."
+        });
+      });
+  };

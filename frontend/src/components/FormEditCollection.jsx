@@ -48,13 +48,27 @@ const FormEditCategory = () => {
             try {
                 showSpinner();
                 const response = await axios.get(`http://localhost:5000/collections/${id}`);
-                setNoBP(response.data.no_bp);
-                setISBN(response.data.isbn);
-                setTitle(response.data.title);
-                setWriter(response.data.writer);
-                setPublish1stYear(response.data.publish_1st_year);
-                setPublishLastYear(response.data.publish_last_year);
-                setAmountPrinted(response.data.amount_printed);
+                if(response.data.no_bp){
+                    setNoBP(response.data.no_bp);
+                }
+                if(response.data.isbn){
+                    setISBN(response.data.isbn);
+                }
+                if(response.data.title){
+                    setTitle(response.data.title);
+                }
+                if(response.data.writer){
+                    setWriter(response.data.writer);
+                }
+                if(response.data.publish_1st_year){
+                    setPublish1stYear(response.data.publish_1st_year);
+                }
+                if(response.data.publish_last_year){
+                    setPublishLastYear(response.data.publish_last_year);
+                }
+                if(response.data.amount_printed){
+                    setAmountPrinted(response.data.amount_printed);
+                }
                 categoryOptions.forEach(element => {
                     if(element.value === response.data.categoryId){
                         setCategory(element);

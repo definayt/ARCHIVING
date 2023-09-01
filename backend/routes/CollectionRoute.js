@@ -6,7 +6,8 @@ import {
     createCollection,
     updateCollection,
     deleteCollection,
-    readExcel
+    readExcel,
+    findAllCollection
 } from "../controllers/Collections.js";
 
 import { verifyUser, pustakawanAndSuperAdminOnly } from "../middleware/AuthUser.js";
@@ -19,5 +20,6 @@ router.post('/collections', verifyUser, pustakawanAndSuperAdminOnly, createColle
 router.patch('/collections/:id', verifyUser, pustakawanAndSuperAdminOnly, updateCollection);
 router.delete('/collections/:id', verifyUser, pustakawanAndSuperAdminOnly, deleteCollection);
 router.post('/collections/excel', verifyUser, pustakawanAndSuperAdminOnly, readExcel)
+router.get("/collection", verifyUser, pustakawanAndSuperAdminOnly, findAllCollection);
 
 export default router;
