@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.12.4",
     "@material-ui/lab": "^4.0.0-alpha.61",
+    "@nivo/bar": "^0.83.0",
     "@nivo/pie": "^0.83.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.17.0",
@@ -12,6 +13,7 @@
     "@testing-library/user-event": "^14.4.3",
     "axios": "^1.4.0",
     "bulma": "^0.9.4",
+    "chart.js": "^4.4.0",
     "datatables.net-buttons": "^2.4.1",
     "datatables.net-dt": "^1.13.6",
     "jquery": "^3.7.0",
@@ -19,6 +21,7 @@
     "pdfmake": "^0.2.7",
     "react": "^18.2.0",
     "react-bootstrap": "^2.8.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",
     "react-input-mask": "^2.0.4",

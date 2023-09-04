@@ -236,6 +236,9 @@ DELETE http://localhost:5000/collections/b2d98c41-03d9-48a8-9979-ed9bfc51dec2
 POST http://localhost:5000/collections/excel
 
 ###
+//get count collection
+GET http://localhost:5000/collection/count-publish-1st-year
+###
 //get All Collection pagination
 GET http://localhost:5000/collection
 
@@ -250,6 +253,10 @@ POST http://localhost:5000/digital-collections/excel
 ###
 //get All digital collections
 GET http://localhost:5000/digital-collections
+
+###
+//get count unique digital collections
+GET http://localhost:5000/digital-collection/count-unique
 
 ###
 //Create digital data

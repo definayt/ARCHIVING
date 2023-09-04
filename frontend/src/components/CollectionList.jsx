@@ -165,6 +165,7 @@ const CollectionList = () => {
                     </td>
                     
                     <td>
+                        <Link to={`/collections/view/${collection.uuid}`} className='button bulma is-small is-rounded is-info mr-2'> Lihat</Link>
                         <Link to={`/collections/edit/${collection.uuid}`} className='button bulma is-small is-rounded is-warning mr-2'> Edit</Link>
                         <button onClick={() => toggleModalDelete(collection.uuid) } className='button bulma is-small is-rounded is-danger'> Delete</button>
                         <DeleteConfirmation confirmModal={deleteCollection} hideModal={toggleModalDelete} modalState={modalDeleteState} dataId={collectionIdState}  />

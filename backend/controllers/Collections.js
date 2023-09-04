@@ -16,7 +16,7 @@ export const getCollections = async(req, res) => {
         if(req.role === "guest"){
             const response = await Collections.findAll({
                 attributes: ['uuid', 'no_bp', 'isbn', 'title', 'writer', 'publish_1st_year', 
-                        'publish_last_year', 'amount_printed', 'synopsis'
+                        'publish_last_year', 'amount_printed', 'synopsis', 'categoryId'
                     ],
                 include:[
                     { model: Categories, attributes: ['category'] }, 
@@ -43,7 +43,7 @@ export const getCollections = async(req, res) => {
         }else{
             const response = await Collections.findAll({
                 attributes: ['uuid', 'no_bp', 'isbn', 'title', 'writer', 'publish_1st_year', 
-                        'publish_last_year', 'amount_printed', 'synopsis'
+                        'publish_last_year', 'amount_printed', 'synopsis', 'categoryId'
                     ],
                 include:[
                     { model: Categories, attributes: ['category'] }, 
@@ -298,48 +298,130 @@ const getPagingData = (data, page, limit) => {
     const totalPages = Math.ceil(totalItems / limit);
   
     return { totalItems, collection, totalPages, currentPage };
-  };
+};
 
-  export const findAllCollection = (req, res) => {
-    const { page, size, title } = req.query;
-    var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
-  
-    const { limit, offset } = getPagination(page, size);
-  
-    Collections.findAndCountAll({ 
-        where: condition, 
-        limit, 
-        offset,
-        attributes: ['uuid', 'no_bp', 'isbn', 'title', 'writer', 'publish_1st_year', 
-                        'publish_last_year', 'amount_printed', 'synopsis'
-                    ],
-        include:[
-            { model: Categories, attributes: ['category'] }, 
-            { model: StoryType, attributes: ['story_type'] }, 
-            { model: Languages, attributes: ['language'] },  
-            { 
-                model: DigitalCollections, 
-                attributes: ['uuid'], 
-                include: [
-                    { 
-                        model: DigitalData, 
-                        attributes: ['file_digital'],
-                        include: [
-                            { model: DigitalFormat, attributes: ['digital_format'] }
-                        ]
-                        }
-                ]
-                },
-        ],
+export const findAllCollection = (req, res) => {
+const { page, size, title } = req.query;
+var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+
+const { limit, offset } = getPagination(page, size);
+
+Collections.findAndCountAll({ 
+    where: condition, 
+    limit, 
+    offset,
+    attributes: ['uuid', 'no_bp', 'isbn', 'title', 'writer', 'publish_1st_year', 
+                    'publish_last_year', 'amount_printed', 'synopsis'
+                ],
+    include:[
+        { model: Categories, attributes: ['category'] }, 
+        { model: StoryType, attributes: ['story_type'] }, 
+        { model: Languages, attributes: ['language'] },  
+        { 
+            model: DigitalCollections, 
+            attributes: ['uuid'], 
+            include: [
+                { 
+                    model: DigitalData, 
+                    attributes: ['file_digital'],
+                    include: [
+                        { model: DigitalFormat, attributes: ['digital_format'] }
+                    ]
+                    }
+            ]
+            },
+    ],
+})
+    .then(data => {
+    const response = getPagingData(data, page, limit);
+    res.send(response);
     })
-      .then(data => {
-        const response = getPagingData(data, page, limit);
-        res.send(response);
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving collection."
-        });
-      });
-  };
+    .catch(err => {
+    res.status(500).send({
+        message:
+        err.message || "Some error occurred while retrieving collection."
+    });
+    });
+};
+
+export const countAllCollection = async (req, res) => {
+    try {
+        const response = await Collections.findOne({
+            attributes: [
+              [db.fn("COUNT", db.col("id")), "countCollection"],
+            ],
+          });
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(500).json({msg: error.message})
+    }
+}
+
+export const countCategory = async (req, res) => {
+    try {
+        const response = await Collections.findAll({
+            attributes: [
+              "categoryId",
+              [db.fn("COUNT", db.col("categoryId")), "countCategory"],
+            ],
+            group: "categoryId",
+            include:[
+                { model: Categories, attributes: ['category'] }
+            ],
+          });
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(500).json({msg: error.message})
+    }
+}
+
+export const countStoryType = async (req, res) => {
+    try {
+        const response = await Collections.findAll({
+            attributes: [
+              "storyTypeId",
+              [db.fn("COUNT", db.col("storyTypeId")), "countStoryType"],
+            ],
+            group: "storyTypeId",
+            include:[
+                { model: StoryType, attributes: ['story_type'] }
+            ],
+          });
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(500).json({msg: error.message})
+    }
+}
+
+export const countLanguage = async (req, res) => {
+    try {
+        const response = await Collections.findAll({
+            attributes: [
+              "languageId",
+              [db.fn("COUNT", db.col("languageId")), "countLanguage"],
+            ],
+            group: "languageId",
+            include:[
+                { model: Languages, attributes: ['language'] }
+            ],
+          });
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(500).json({msg: error.message})
+    }
+}
+
+export const countPublished1stYear = async (req, res) => {
+    try {
+        const response = await Collections.findAll({
+            attributes: [
+              "publish_1st_year",
+              [db.fn("COUNT", db.col("publish_1st_year")), "countPublishYear"],
+            ],
+            group: "publish_1st_year",
+          });
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(500).json({msg: error.message})
+    }
+}

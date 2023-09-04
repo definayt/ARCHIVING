@@ -1,5 +1,6 @@
 import DigitalCollections from "../models/DigitalCollectionModel.js";
 import xlsx from "xlsx";
+import db from "../config/Database.js";
 
 export const getDigitalCollectionsUnique = async(req, res) => {
     try {

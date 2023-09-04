@@ -6,7 +6,7 @@ import Select from 'react-select';
 import RRMultiSelect from 'rr-multi-select';
 import InputMask from "react-input-mask";
 
-const FormEditCategory = () => {
+const FormEditCollection= () => {
     const [no_bp, setNoBP] = useState("");
     const [isbn, setISBN] = useState("");
     const [title, setTitle] = useState("");
@@ -454,4 +454,4 @@ const FormEditCategory = () => {
   )
 }
 
-export default FormEditCategory
+export default FormEditCollection
