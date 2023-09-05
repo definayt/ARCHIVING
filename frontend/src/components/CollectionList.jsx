@@ -109,7 +109,63 @@ const CollectionList = () => {
             columnDefs: [ {
                 // targets: -1,
                 // visible: false
-            } ]
+            } ],
+            // serverSide: true,
+            // ordering: false,
+            // scrollY: 500,
+            // scroller: {
+            //     loadingIndicator: true
+            // },
+            // ajax: function (data, callback, settings) {
+            //     let out = [];
+         
+            //     for (var i = data.start, ien = data.start + data.length; i < ien; i++) {
+            //         let no_bp, isbn, title, writer, publish_1st_year, publish_last_year, amount_printed,
+            //             category, story_type, language, uuid;
+            //         if(collections && collections.length){
+            //             uuid = collections[i].uuid ? collections[i].uuid : "-";
+            //             no_bp = collections[i].no_bp ? collections[i].no_bp : "-";
+            //             isbn = collections[i].isbn ? collections[i].isbn : "-";
+            //             title = collections[i].title ? collections[i].title : "-";
+            //             writer = collections[i].writer ? collections[i].writer : "-";
+            //             publish_1st_year = collections[i].publish_1st_year ? collections[i].publish_1st_year : "-";
+            //             publish_last_year = collections[i].publish_last_year ? collections[i].publish_last_year : "-";
+            //             amount_printed = collections[i].amount_printed ? collections[i].amount_printed : "-";
+            //             category = collections[i].category.category ? collections[i].category.category : "-";
+            //             story_type = collections[i].story_type.story_type ? collections[i].story_type.story_type : "-";
+            //             language = collections[i].language.language ? collections[i].language.language : "-";
+            //             publish_1st_year = collections[i].publish_1st_year ? collections[i].publish_1st_year : "-";
+            //         }else{
+            //             uuid = no_bp = isbn = title = writer = publish_1st_year = publish_last_year = amount_printed = category = story_type = language = "-";
+            //         }
+                    
+            //         out.push([
+            //             i+1, 
+            //             no_bp, 
+            //             isbn, 
+            //             title, 
+            //             writer,
+            //             publish_1st_year,
+            //             publish_last_year,
+            //             amount_printed,
+            //             category,
+            //             story_type,
+            //             language,
+            //             language,
+            //             uuid
+            //             // buttonAction(uuid)
+            //         ]);
+            //     }
+         
+            //     setTimeout(() => {
+            //         callback({
+            //             draw: data.draw,
+            //             data: out,
+            //             recordsTotal: collections.length,
+            //             recordsFiltered: collections.length
+            //         });
+            //     }, 50);
+            // },
         });
     } 
     $(document).ready(function () {
@@ -117,6 +173,17 @@ const CollectionList = () => {
             drawDataTable();
         } ,1000);
     });
+
+    // function buttonAction(uuid){
+    //     return(
+    //         <div>
+    //             <Link to={`/collections/view/${uuid}`} className='button bulma is-small is-rounded is-info mr-2'> Lihat</Link>
+    //             <Link to={`/collections/edit/${uuid}`} className='button bulma is-small is-rounded is-warning mr-2'> Edit</Link>
+    //             <button onClick={() => toggleModalDelete(uuid) } className='button bulma is-small is-rounded is-danger'> Delete</button>
+    //             <DeleteConfirmation confirmModal={deleteCollection} hideModal={toggleModalDelete} modalState={modalDeleteState} dataId={collectionIdState}  />
+    //         </div>
+    //     )
+    // }
   return (
     <div>
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data Berhasil Dihapus"}  />

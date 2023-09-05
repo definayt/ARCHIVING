@@ -206,7 +206,7 @@ GET http://localhost:5000/collections
 
 ###
 //get Single Collection
-GET http://localhost:5000/collections/9a4f41ed-27cb-461b-a651-3b81d03799a6
+GET http://localhost:5000/collections/5ef08ee6-58d2-4e34-97ff-25e82051a8c4
 
 ###
 //update collection

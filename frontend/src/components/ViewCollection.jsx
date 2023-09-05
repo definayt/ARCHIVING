@@ -277,7 +277,7 @@ const ViewCollection= () => {
                             <div className="control">
                                 <div className='buttons is-centered'>
                                 <Link to={`/collections/edit/${uuid}`} className='button bulma is-warning mr-2'> Edit</Link>
-                                    <Link to={"/collections"} className="button is-danger mr-2">Kembali</Link>
+                                    <Link to={"/collection"} className="button is-danger mr-2">Kembali</Link>
                                 </div>
                             </div>
                         </div>

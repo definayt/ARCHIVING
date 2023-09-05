@@ -32,7 +32,7 @@ const FormAddCollection = () => {
         setModalState(!modalState);
     };
     const navigation = () => {
-        navigate("/collections");
+        navigate("/collection");
     };
 
     function replaceCharacter(string, index, replacement) {
@@ -355,7 +355,7 @@ const FormAddCollection = () => {
                         <div className="field">
                             <div className="control">
                                 <div className='buttons is-centered'>
-                                    <Link to={"/collections"} className="button is-danger mr-2">Batal</Link>
+                                    <Link to={"/collection"} className="button is-danger mr-2">Batal</Link>
                                     <button type='submit' className="button is-success">Simpan</button>
                                 </div>
                             </div>

@@ -33,7 +33,7 @@ const FormEditCollection= () => {
         setModalState(!modalState);
     };
     const navigation = () => {
-        navigate("/collections");
+        navigate("/collection");
     };
 
     useEffect(()=>{
@@ -440,7 +440,7 @@ const FormEditCollection= () => {
                         <div className="field">
                             <div className="control">
                                 <div className='buttons is-centered'>
-                                    <Link to={"/collections"} className="button is-danger mr-2">Batal</Link>
+                                    <Link to={"/collection"} className="button is-danger mr-2">Batal</Link>
                                     <button type='submit' className="button is-success">Simpan</button>
                                 </div>
                             </div>

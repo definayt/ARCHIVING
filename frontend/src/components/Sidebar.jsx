@@ -28,7 +28,7 @@ const Sidebar = () => {
             </p>
             <ul className="menu-list">
                 <li><NavLink to={"/dashboard"}> <IoHome/> Dashboard</NavLink></li>
-                <li><NavLink to={"/collections"}> <IoBook/> Data Koleksi</NavLink></li>
+                <li><NavLink to={"/collection"}> <IoBook/> Data Koleksi</NavLink></li>
                 <li><NavLink to={"/digital-data"}> <IoDocumentAttach/> Data Digital</NavLink></li>
             </ul>
             {user && user.role === "super-admin" && (

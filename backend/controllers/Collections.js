@@ -302,12 +302,21 @@ const getPagingData = (data, page, limit) => {
 
 export const findAllCollection = (req, res) => {
 const { page, size, title } = req.query;
-var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+var condition = title ? { 
+                [Op.or] : {
+                    title: { [Op.like]: `%${title}%` }, 
+                    writer: { [Op.like]: `%${title}%` }, 
+                    isbn: { [Op.like]: `%${title}%` },
+                    no_bp: { [Op.like]: `%${title}%` },
+                    publish_1st_year: { [Op.like]: `%${title}%` },
+                    publish_last_year: { [Op.like]: `%${title}%` },
+                }
+            } : null;
 
 const { limit, offset } = getPagination(page, size);
 
 Collections.findAndCountAll({ 
-    where: condition, 
+    where: condition,
     limit, 
     offset,
     attributes: ['uuid', 'no_bp', 'isbn', 'title', 'writer', 'publish_1st_year', 

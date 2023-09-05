@@ -51,7 +51,7 @@ const Navbar = () => {
                 <NavLink to={"/dashboard"}> <IoHome/> Dashboard</NavLink>
               </div>
               <div className='navbar-item '>
-                <NavLink to={"/collections"}> <IoBook/> Data Koleksi</NavLink>
+                <NavLink to={"/collection"}> <IoBook/> Data Koleksi</NavLink>
               </div>
               <div className='navbar-item'>
                 <NavLink to={"/digital-data"}> <IoDocumentAttach/> Data Digital</NavLink>

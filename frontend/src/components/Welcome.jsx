@@ -176,7 +176,7 @@ const Welcome = () => {
   return (
     <div>
         <h1 className='title has-text-centered mt-3'>Dashboard</h1>
-        <h2 className='subtitle has-text-centered'>Welcome Back <strong>{user && user.name}</strong></h2>
+        {/* <h2 className='subtitle has-text-centered'>Welcome Back <strong>{user && user.name}</strong></h2> */}
         <div className='columns' style={{ height: '350px' }}>
           <div className='column is-half' style={{ height: '100%' }}>
             <h3 className='subtitle has-text-centered'>Total Koleksi <strong>{collections.countCollection}</strong> Judul</h3>
@@ -421,7 +421,7 @@ const Welcome = () => {
         </div>
         <div className='columns' style={{ height: '2000px' }}>
           <div className='column is-fullWidth' style={{height: "100%"}}>
-            <h3 className='subtitle has-text-centered'>Tahun Terbit</h3>
+            <h3 className='subtitle has-text-centered'>Tahun Terbit Cetakan Pertama</h3>
             <ResponsiveBar
               data={dataTahunTerbit}
               keys={[

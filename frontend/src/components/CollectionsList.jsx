@@ -2,7 +2,11 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import Pagination from "@material-ui/lab/Pagination";
 import CollectionService from "../services/CollectionService";
 import { useTable } from "react-table";
+import {IoEye, IoPencil, IoTrash} from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
+import DeleteConfirmation from './DeleteConfirmation';
+import SuccessModal from './SuccessModal';
+import axios from 'axios';
 
 const CollectionList = (props) => {
   const navigate = useNavigate();
@@ -72,24 +76,38 @@ const CollectionList = (props) => {
   const openCollection = (rowIndex) => {
     const id = collectionRef.current[rowIndex].uuid;
 
+    navigate(`/collections/view/${id}`)
+  };
+
+  const editCollection = (rowIndex) => {
+    const id = collectionRef.current[rowIndex].uuid;
+
     navigate(`/collections/edit/${id}`)
+  };
+  const [modalDeleteState, setModalDeleteState] = useState(false);
+  const [collectionIdState, setcollectionIdState] = useState("");
+  const toggleModalDelete = (dataId) => {
+      setModalDeleteState(!modalDeleteState);
+      setcollectionIdState(dataId);
+  };
+  const [modalState, setModalState] = useState(false);
+    
+  const toggleModal = () => {
+      setModalState(!modalState);
   };
 
   const deleteCollection = (rowIndex) => {
-    const id = collectionRef.current[rowIndex].id;
+    const id = collectionRef.current[rowIndex].uuid;
+    toggleModalDelete(id);
 
-    CollectionService.remove(id)
-      .then((response) => {
-        props.history.push("/collection");
-
-        let newCollection = [...collectionRef.current];
-        newCollection.splice(rowIndex, 1);
-
-        setCollection(newCollection);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+  };
+  const deleteDataCollection = async (collectionId) => {
+    await axios.delete(`http://localhost:5000/collections/${collectionId}`);
+    toggleModalDelete();
+    toggleModal();
+  }
+  const navigation = () => {
+    window.location.reload(false);
   };
 
   const handlePageChange = (event, value) => {
@@ -132,8 +150,24 @@ const CollectionList = (props) => {
         accessor: "writer",
       },
       {
+        Header: "Tahun Terbit Cetakan ke-1",
+        accessor: "publish_1st_year",
+      },
+      {
+        Header: "Tahun Terbit Cetakan Terakhir",
+        accessor: "publish_last_year",
+      },
+      {
         Header: "Kategori",
         accessor: "category.category",
+      },
+      {
+        Header: "Jenis Cerita",
+        accessor: "story_type.story_type",
+      },
+      {
+        Header: "Bahasa",
+        accessor: "language.language",
       },
       {
         Header: "Actions",
@@ -143,11 +177,15 @@ const CollectionList = (props) => {
           return (
             <div>
               <span onClick={() => openCollection(rowIdx)}>
-                <button className='button bulma is-small is-rounded is-warning mr-2'> Edit</button>
+                <button className='button bulma is-small is-rounded is-info mr-2'> <IoEye></IoEye></button>
+              </span>
+
+              <span onClick={() => editCollection(rowIdx)}>
+                <button className='button bulma is-small is-rounded is-warning mr-2'> <IoPencil></IoPencil></button>
               </span>
 
               <span onClick={() => deleteCollection(rowIdx)}>
-              <button className='button bulma is-small is-rounded is-danger mr-2'> Hapus</button>
+              <button className='button bulma is-small is-rounded is-danger mr-2'> <IoTrash></IoTrash></button>
               </span>
             </div>
           );
@@ -173,15 +211,13 @@ const CollectionList = (props) => {
       <h1 className='title has-text-centered mt-3'>Koleksi</h1>
       <h2 className='subtitle has-text-centered'>Daftar Koleksi</h2>
       
-      <div className="buttons is-right">
-          <Link to={"/collections/add"} className='button is-primary mb-2'>Tambah</Link>
-      </div>
-      <div className="columns is-right">
+      
+      <div className="columns">
         <div className="column is-one-quarter">
           <input
             type="text"
             className="input"
-            placeholder="Cari Berdasarkan Judul"
+            placeholder="Cari Data"
             value={searchTitle}
             onChange={onChangeSearchTitle}
           />
@@ -194,6 +230,11 @@ const CollectionList = (props) => {
             >
               Cari
             </button>
+          </div>
+          <div className="column">
+            <div className="buttons is-right">
+                <Link to={"/collections/add"} className='button is-primary mb-2'>Tambah</Link>
+            </div>
           </div>
       </div>
 
@@ -251,6 +292,9 @@ const CollectionList = (props) => {
             })}
           </tbody>
         </table>
+        <DeleteConfirmation confirmModal={deleteDataCollection} hideModal={toggleModalDelete} modalState={modalDeleteState} dataId={collectionIdState}  />
+        <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data Berhasil Dihapus"}  />
+
         </div>
       </div>
     </div>
