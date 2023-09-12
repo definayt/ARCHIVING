@@ -255,17 +255,16 @@ const FormEditCollection= () => {
         setDisplayForm("block");
     }
 
-
   return (
     <div>
         <div style={{display: display_value}} className='column is-fullWidth'>
-        <div className='equal-height'>
-            <div className='is-flex is-horizontal-center'>
-                <figure className='image is-64x64'>
-                <img alt='loading'  src="http://chimplyimage.appspot.com/images/samples/classic-spinner/animatedCircle.gif" />
-                    </figure>
+            <div className='equal-height'>
+                <div className='is-flex is-horizontal-center'>
+                    <figure className='image is-64x64'>
+                    <img alt='loading'  src="http://chimplyimage.appspot.com/images/samples/classic-spinner/animatedCircle.gif" />
+                        </figure>
+                </div>
             </div>
-        </div>
         </div>
         <div style={{display: display_form}}>
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data berhasil disimpan."}  />

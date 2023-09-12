@@ -28,7 +28,9 @@ const CollectionList = () => {
     }, []);
     const navigate = useNavigate();
     const getCollections = async () => {
-        await axios.get('http://localhost:5000/collections')
+        try {
+            showSpinner();
+            await axios.get('http://localhost:5000/collections')
             .then((response) => {
                 setCollections(response.data);
             })
@@ -42,6 +44,13 @@ const CollectionList = () => {
                         break
                 }
             });
+            
+        } catch (error) {
+            
+        }finally {
+            
+        }
+        
     };
 
     const [modalDeleteState, setModalDeleteState] = useState(false);
@@ -172,6 +181,9 @@ const CollectionList = () => {
         setTimeout(function(){
             drawDataTable();
         } ,1000);
+        setTimeout(function(){
+            hideSpinner();
+        } ,10000);
     });
 
     // function buttonAction(uuid){
@@ -184,16 +196,37 @@ const CollectionList = () => {
     //         </div>
     //     )
     // }
+    const [display_value, setDisplayValue] = useState("none");
+    const [display_table, setDisplayTable] = useState("none");
+    function showSpinner() {
+        setDisplayValue("block");
+        setDisplayTable("none");
+    }
+      
+    function hideSpinner() {
+        setDisplayValue("none");
+        setDisplayTable("block");
+    }
   return (
     <div>
+        <div style={{display: display_value}} className='column is-fullWidth'>
+            <div className='equal-height'>
+                <div className='is-flex is-horizontal-center'>
+                    <figure className='image is-64x64'>
+                    <img alt='loading'  src="http://chimplyimage.appspot.com/images/samples/classic-spinner/animatedCircle.gif" />
+                        </figure>
+                </div>
+            </div>
+        </div>
+        <div style={{display: display_table}}>
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data Berhasil Dihapus"}  />
         <h1 className='title has-text-centered mt-3'>Koleksi</h1>
         <h2 className='subtitle has-text-centered'>Daftar Koleksi</h2>
         
-        <div className="buttons is-right">
-            <Link to={"/collections/add"} className='button is-primary mb-2'>Tambah</Link>
+        <div className="buttons is-left">
+            <Link to={"/collection"} className='button is-danger mb-2'>Kembali</Link>
         </div>
-        <table id='datatable' className='table is-striped' style={{fontSize: "12px"}}>
+        <table id='datatable' className='table is-striped' style={{fontSize: "12px", minWidth: "100%"}}>
             <thead>
                 <tr>
                     <th>No</th>
@@ -208,7 +241,7 @@ const CollectionList = () => {
                     <th>Jenis Cerita</th>
                     <th>Bahasa</th>
                     <th>Data Digital</th>
-                    <th style={{minWidth: "130px"}}>Aksi</th>
+                    {/* <th >Aksi</th> */}
                 </tr>
             </thead>
             <tbody>
@@ -231,17 +264,19 @@ const CollectionList = () => {
                     )}
                     </td>
                     
-                    <td>
+                    {/* <td>
                         <Link to={`/collections/view/${collection.uuid}`} className='button bulma is-small is-rounded is-info mr-2'> Lihat</Link>
                         <Link to={`/collections/edit/${collection.uuid}`} className='button bulma is-small is-rounded is-warning mr-2'> Edit</Link>
                         <button onClick={() => toggleModalDelete(collection.uuid) } className='button bulma is-small is-rounded is-danger'> Delete</button>
                         <DeleteConfirmation confirmModal={deleteCollection} hideModal={toggleModalDelete} modalState={modalDeleteState} dataId={collectionIdState}  />
-                    </td>
+                    </td> */}
                 </tr>
                ))}
             </tbody>
         </table>
+        </div>
     </div>
+    
   )
 }
 

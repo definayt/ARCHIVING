@@ -234,6 +234,7 @@ const CollectionList = (props) => {
           <div className="column">
             <div className="buttons is-right">
                 <Link to={"/collections/add"} className='button is-primary mb-2'>Tambah</Link>
+                <Link to={"/collections"} className='button is-info mb-2'>Cetak</Link>
             </div>
           </div>
       </div>
