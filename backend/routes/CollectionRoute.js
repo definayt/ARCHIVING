@@ -12,7 +12,8 @@ import {
     countCategory,
     countStoryType, 
     countLanguage,
-    countPublished1stYear
+    countPublished1stYear,
+    exportExcelCollections
 } from "../controllers/Collections.js";
 
 import { verifyUser, pustakawanAndSuperAdminOnly } from "../middleware/AuthUser.js";
@@ -25,6 +26,7 @@ router.post('/collections', verifyUser, pustakawanAndSuperAdminOnly, createColle
 router.patch('/collections/:id', verifyUser, pustakawanAndSuperAdminOnly, updateCollection);
 router.delete('/collections/:id', verifyUser, pustakawanAndSuperAdminOnly, deleteCollection);
 router.post('/collections/excel', verifyUser, pustakawanAndSuperAdminOnly, readExcel);
+router.get("/collections-export", verifyUser, exportExcelCollections);
 router.get("/collection/count-all", verifyUser, countAllCollection);
 router.get("/collection/count-category", verifyUser, countCategory);
 router.get("/collection/count-story-type", verifyUser, countStoryType);

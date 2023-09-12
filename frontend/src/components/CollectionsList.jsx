@@ -8,6 +8,8 @@ import DeleteConfirmation from './DeleteConfirmation';
 import SuccessModal from './SuccessModal';
 import axios from 'axios';
 import Select from 'react-select';
+import * as FileSaver from 'file-saver';
+import XLSX from 'sheetjs-style';
 
 const CollectionList = (props) => {
   const navigate = useNavigate();
@@ -299,6 +301,71 @@ const CollectionList = (props) => {
     data: collection,
   });
 
+  const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  const fileExtension = '.xlsx';
+  var today = new Date(),
+  date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()+'-'+today.getTime();
+  const fileName = date+'_Koleksi';
+
+  const exportToExcel = async () => {
+    try {
+      const params = getRequestParams(searchInput, category, story_type, language, page, pageSize);
+        await axios.get('http://localhost:5000/collections-export', {params: params})
+        .then((response) => {
+            const dataCollection = [];
+            let i = 1;
+            response.data.forEach(element => {
+              let digital_data = "";
+              if(element.digital_collections){
+                let j = 1;
+                element.digital_collections.forEach(data => {
+                  if(j>1 && j !== element.digital_collections.length-1){
+                    digital_data+=", "
+                  }
+                  digital_data += data.digital_datum.digital_format.digital_format
+                  j += 1;
+                });
+              }
+              
+              dataCollection.push({
+                "No" : i,
+                "No BP" : element.no_bp,
+                "ISBN" : element.isbn,
+                "Judul" : element.title,
+                "Penulis" : element.writer,
+                "Tahun Terbit Cetakan Pertama" : element.publish_1st_year,
+                "Tahun Terbit Cetakan Terakhir" : element.publish_last_year,
+                "Jumlah Cetakan" : element.amount_printed,
+                "Kategori" : element.category.category,
+                "Jenis Cerita" : element.story_type.story_type,
+                "Bahasa" : element.language.language,
+                "Data Digital" : digital_data
+              })
+              i += 1;
+            });
+            const ws = XLSX.utils.json_to_sheet(dataCollection);
+            const wb = {Sheets: { 'data': ws}, SheetNames: ['data']};
+            const excelBuffer = XLSX.write(wb, {bookType: 'xlsx', type: 'array'});
+            const data = new Blob([excelBuffer], {type: fileType});
+            FileSaver.saveAs(data, fileName + fileExtension);
+        })
+        .catch((error) => {
+            // Error
+            alert(error)
+            switch (error.response.status) {
+                case 403:
+                    navigate("/403");
+                    break;
+                default:
+                    break
+            }
+        });
+        
+    } catch (error) {
+        
+    }        
+  };
+  
   return (
     <div className="list rowcolumns">
       <h1 className='title has-text-centered mt-3'>Koleksi</h1>
@@ -365,17 +432,13 @@ const CollectionList = (props) => {
             </div>
           </div>
           <div className="buttons is-right">
-            <button
-              className="button is-link"
-              type="button"
-              onClick={findByTitle}
-            >Cari</button>
+            <button className="button is-link is-outlined" type="button" onClick={findByTitle}>Cari</button>
+            <button className="button is-success is-outlined" onClick={exportToExcel}>Cetak</button>
           </div>
           </div>
           <div className="column">
             <div className="buttons is-right">
                 <Link to={"/collections/add"} className='button is-primary mb-2'>Tambah</Link>
-                <Link to={"/collections"} className='button is-info mb-2'>Cetak</Link>
             </div>
           </div>
       </div>

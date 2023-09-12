@@ -232,8 +232,12 @@ Content-Type: application/json
 DELETE http://localhost:5000/collections/b2d98c41-03d9-48a8-9979-ed9bfc51dec2
 
 ###
-//export collection
+//import collection
 POST http://localhost:5000/collections/excel
+
+###
+//export Collection
+POST  http://localhost:5000/collections/export
 
 ###
 //get count collection

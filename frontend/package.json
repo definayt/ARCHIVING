@@ -17,6 +17,7 @@
     "datatables.net-buttons": "^2.4.1",
     "datatables.net-dt": "^1.13.6",
     "datatables.net-scroller": "^2.2.0",
+    "file-saver": "^2.0.5",
     "jquery": "^3.7.0",
     "jszip": "^3.10.1",
     "pdfmake": "^0.2.7",
@@ -32,6 +33,7 @@
     "react-select": "^5.7.4",
     "react-table": "^7.8.0",
     "rr-multi-select": "^1.0.7",
+    "sheetjs-style": "^0.15.8",
     "victory": "^36.6.11",
     "victory-native": "^36.6.11",
     "web-vitals": "^2.1.4"
