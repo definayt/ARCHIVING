@@ -25,6 +25,7 @@ import AddCollection from "./pages/AddCollection";
 import EditCollection from "./pages/EditCollection";
 
 import CollectionList from "./pages/CollectionList";
+import DigitalDataList from "./pages/DigitalDataList";
 import PageViewCollection from "./pages/PageViewCollection";
 
 function App() {
@@ -42,7 +43,7 @@ function App() {
           <Route path="/collections/add" element={<AddCollection/>}/>
           <Route path="/collections/edit/:id" element={<EditCollection/>} />
           <Route path="/collections/view/:id" element={<PageViewCollection/>} />
-          <Route path="/digital-data" element={<DigitalData/>}/>
+          <Route path="/digital-data" element={<DigitalDataList/>}/>
           <Route path="/digital-data/add" element={<AddDigitalData/>}/>
           <Route path="/digital-data/edit/:id" element={<EditDigitalData/>}/>
           <Route path="/categories" element={<Categories/>}/>

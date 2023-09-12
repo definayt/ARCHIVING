@@ -32,6 +32,6 @@ router.get("/collection/count-category", verifyUser, countCategory);
 router.get("/collection/count-story-type", verifyUser, countStoryType);
 router.get("/collection/count-language", verifyUser, countLanguage);
 router.get("/collection/count-publish-1st-year", verifyUser, countPublished1stYear);
-router.get("/collection", verifyUser, pustakawanAndSuperAdminOnly, findAllCollection);
+router.get("/collection", verifyUser, findAllCollection);
 
 export default router;

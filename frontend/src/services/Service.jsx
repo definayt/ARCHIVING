@@ -1,12 +1,19 @@
 import http from "../http-common";
 import axios from "axios";
 
-const getAll = async(params) => {
+const getAllCollection = async(params) => {
   const response = await axios.get("http://localhost:5000/collection", {
     params: params
 });
 return response
   // return http.get("/collection", { params });
+};
+
+const getAllDigitalData = async(params) => {
+  const response = await axios.get("http://localhost:5000/digital-data-2", {
+    params: params
+});
+return response
 };
 
 const get = (id) => {
@@ -33,8 +40,9 @@ const findByTitle = (title) => {
   return http.get(`/collection?title=${title}`);
 };
 
-const CollectionService = {
-  getAll,
+const Service = {
+  getAllCollection,
+  getAllDigitalData,
   get,
   create,
   update,
@@ -43,4 +51,4 @@ const CollectionService = {
   findByTitle,
 };
 
-export default CollectionService;
+export default Service;

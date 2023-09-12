@@ -2,6 +2,8 @@ import DigitalData from "../models/DigitalDataModel.js";
 import DigitalFormat from "../models/DigitalFormatModel.js";
 import Users from "../models/UserModel.js";
 import xlsx from "xlsx";
+import db from "../config/Database.js";
+const Op = db.Sequelize.Op;
 
 export const getDigitalDatas = async(req, res) => {
     try{
@@ -117,4 +119,106 @@ export const readExcel = (req, res) => {
         res.status(400).json({msg: error.message});
     }
     
+}
+
+const getPagination = (page, size) => {
+    const limit = size ? +size : 10;
+    const offset = page ? page * limit : 0;
+  
+    return { limit, offset };
+};
+
+const getPagingData = (data, page, limit) => {
+    const { count: totalItems, rows: digitalData } = data;
+    const currentPage = page ? +page : 0;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return { totalItems, digitalData, totalPages, currentPage };
+};
+
+export const findAllDigitalData = (req, res) => {
+    const { page, size, input, digitalFormat } = req.query;
+    if(digitalFormat){
+        var condition = input ? { 
+            [Op.and] : {
+                [Op.or] : {
+                    title: { [Op.like]: `%${input}%` }, 
+                    
+                },
+                digitalFormatId : digitalFormat,
+            }
+        } : {
+            [Op.and] : {
+            digitalFormatId : digitalFormat,
+            }
+        };
+    }else{
+        var condition = input ? { 
+            [Op.or] : {
+                title: { [Op.like]: `%${input}%` },
+            }
+        } : null;
+    }
+
+    const { limit, offset } = getPagination(page, size);
+
+    DigitalData.findAndCountAll({ 
+        where: condition,
+        limit, 
+        offset,
+        attributes: ['id','uuid', 'title', 'file_digital'],
+        include:[
+            { model: DigitalFormat, attributes: ['digital_format'] }, 
+            { model: Users, attributes: ['name'] }, 
+        ]
+    })
+    .then(data => {
+    const response = getPagingData(data, page, limit);
+    res.send(response);
+    })
+    .catch(err => {
+    res.status(500).send({
+        message:
+        err.message || "Some error occurred while retrieving digital data."
+    });
+    });
+};
+
+export const exportExcelDigitalData = async(req, res) => {
+    const { page, size, input, digitalFormat } = req.query;
+    if(digitalFormat){
+        var condition = input ? { 
+            [Op.and] : {
+                [Op.or] : {
+                    title: { [Op.like]: `%${input}%` }, 
+                    
+                },
+                digitalFormatId : digitalFormat,
+            }
+        } : {
+            [Op.and] : {
+            digitalFormatId : digitalFormat,
+            }
+        };
+    }else{
+        var condition = input ? { 
+            [Op.or] : {
+                title: { [Op.like]: `%${input}%` },
+            }
+        } : null;
+    }
+    try {
+        const response = await DigitalData.findAll({
+            where: condition,
+            attributes: ['id','uuid', 'title', 'file_digital'],
+            include:[
+                { model: DigitalFormat, attributes: ['digital_format'] }, 
+                { model: Users, attributes: ['name'] }, 
+            ]
+        });
+        res.status(200).json(response);
+        
+    } catch (error) {
+        res.status(500).json({msg: error.message})
+    }
 }

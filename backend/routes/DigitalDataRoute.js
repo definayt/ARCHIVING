@@ -6,7 +6,9 @@ import {
     createDigitalData,
     updateDigitalData,
     deleteDigitalData,
-    readExcel
+    readExcel,
+    findAllDigitalData,
+    exportExcelDigitalData
 } from "../controllers/DigitalData.js";
 import { verifyUser, pustakawanAndSuperAdminOnly } from "../middleware/AuthUser.js";
 
@@ -18,5 +20,7 @@ router.post('/digital-data', verifyUser, pustakawanAndSuperAdminOnly, createDigi
 router.patch('/digital-data/:id', verifyUser, pustakawanAndSuperAdminOnly, updateDigitalData);
 router.delete('/digital-data/:id', verifyUser, pustakawanAndSuperAdminOnly, deleteDigitalData);
 router.post('/digital-data/excel', verifyUser, pustakawanAndSuperAdminOnly, readExcel)
+router.get("/digital-data-2", verifyUser, findAllDigitalData);
+router.get("/digital-data-export", verifyUser, exportExcelDigitalData);
 
 export default router;

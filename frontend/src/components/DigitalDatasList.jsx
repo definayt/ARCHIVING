@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import Pagination from "@material-ui/lab/Pagination";
-import Service from "../services/Service";
 import { useTable, useFlexLayout } from "react-table";
-import {IoEye, IoPencil, IoTrash} from "react-icons/io5";
+import { IoPencil, IoTrash} from "react-icons/io5";
+import Service from "../services/Service";
 import { Link, useNavigate } from 'react-router-dom';
 import DeleteConfirmation from './DeleteConfirmation';
 import SuccessModal from './SuccessModal';
@@ -11,11 +11,11 @@ import Select from 'react-select';
 import * as FileSaver from 'file-saver';
 import XLSX from 'sheetjs-style';
 
-const CollectionList = (props) => {
+const DigitalDataList = (props) => {
   const navigate = useNavigate();
-  const [collection, setCollection] = useState([]);
+  const [digitalData, setDigitalData] = useState([]);
   const [searchInput, setSearchInput] = useState("");
-  const collectionRef = useRef();
+  const digitalDataRef = useRef();
 
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
@@ -23,30 +23,26 @@ const CollectionList = (props) => {
 
   const pageSizes = [10, 50, 100];
 
-  collectionRef.current = collection;
+  digitalDataRef.current = digitalData;
 
   const onChangeSearchInput = (e) => {
     const searchInput = e.target.value;
     setSearchInput(searchInput);
   };
 
-  const [category, setCategory] = useState("");
-  const [story_type, setStoryType] = useState("");
-  const [language, setLanguage] = useState("");
-  const [categoryOptions, setCategoryOptions] = useState([]);
-  const [storyTypeOptions, setStoryTypeOptions] = useState([]);
-  const [languageOptions, setLanguageOptions] = useState([]);
-  const getCategories = async () => {
-    await axios.get('http://localhost:5000/categories')
+  const [digitalFormat, setDigitalFormat] = useState("");
+  const [digitalFormatOptions, setDigitalFormatOptions] = useState([]);
+  const getDigitalFormat = async () => {
+    await axios.get('http://localhost:5000/digital-format')
         .then((response) => {
             let arr = [];
             response.data.forEach(datum => {
                 arr.push({
                     value : datum.id,
-                    label : datum.category
+                    label : datum.digital_format
                 });
             });
-            setCategoryOptions(arr);
+            setDigitalFormatOptions(arr);
         })
         .catch((error) => {
             // Error
@@ -59,70 +55,14 @@ const CollectionList = (props) => {
             }
         });
   };
-  const getStoryTypes = async () => {
-      await axios.get('http://localhost:5000/story-types')
-          .then((response) => {
-              let arr = [];
-              response.data.forEach(datum => {
-                  arr.push({
-                      value : datum.id,
-                      label : datum.story_type
-                  });
-              });
-              setStoryTypeOptions(arr);
-          })
-          .catch((error) => {
-              // Error
-              switch (error.response.status) {
-                  case 403:
-                      navigate("/403");
-                      break;
-                  default:
-                      break
-              }
-          });
-  };
-  const getLanguages = async () => {
-      await axios.get('http://localhost:5000/languages')
-          .then((response) => {
-              let arr = [];
-              response.data.forEach(datum => {
-                  arr.push({
-                      value : datum.id,
-                      label : datum.language
-                  });
-              });
-              setLanguageOptions(arr);
-          })
-          .catch((error) => {
-              // Error
-              switch (error.response.status) {
-                  case 403:
-                      navigate("/403");
-                      break;
-                  default:
-                      break
-              }
-          });
-  };
   useEffect(()=>{
-      getCategories();
-      getStoryTypes();
-      getLanguages();
+      getDigitalFormat();
   }, []);
 
-  const getRequestParams = (searchInput, category, story_type, language, page, pageSize) => {
+  const getRequestParams = (searchInput, digitalFormat, page, pageSize) => {
     let params = {};
-    if(category){
-      params["category"] = category.value;
-    }
-
-    if(story_type){
-      params["story_type"] = story_type.value;
-    }
-
-    if(language){
-      params["language"] = language.value;
+    if(digitalFormat){
+      params["digitalFormat"] = digitalFormat.value;
     }
 
     if (searchInput) {
@@ -140,14 +80,13 @@ const CollectionList = (props) => {
     return params;
   };
 
-  const retrieveCollection = () => {
-    const params = getRequestParams(searchInput, category, story_type, language, page, pageSize);
+  const retrieveDigitalData = () => {
+    const params = getRequestParams(searchInput, digitalFormat, page, pageSize);
+    Service.getAllDigitalData(params)
+    .then((response) => {
+        const { digitalData, totalPages } = response.data;
 
-    Service.getAllCollection(params)
-      .then((response) => {
-        const { collection, totalPages } = response.data;
-
-        setCollection(collection);
+        setDigitalData(digitalData);
         setCount(totalPages);
 
         console.log(response.data);
@@ -157,27 +96,21 @@ const CollectionList = (props) => {
       });
   };
 
-  useEffect(retrieveCollection, [page, pageSize]);
+  useEffect(retrieveDigitalData, [page, pageSize]);
 
   const refreshList = () => {
-    retrieveCollection();
+    retrieveDigitalData();
   };
 
   const findByTitle = () => {
     setPage(1);
-    retrieveCollection();
+    retrieveDigitalData();
   };
 
-  const openCollection = (rowIndex) => {
-    const id = collectionRef.current[rowIndex].uuid;
+  const editDigitalData = (rowIndex) => {
+    const id = digitalDataRef.current[rowIndex].uuid;
 
-    navigate(`/collections/view/${id}`)
-  };
-
-  const editCollection = (rowIndex) => {
-    const id = collectionRef.current[rowIndex].uuid;
-
-    navigate(`/collections/edit/${id}`)
+    navigate(`/digital-data/edit/${id}`)
   };
   const [modalDeleteState, setModalDeleteState] = useState(false);
   const [collectionIdState, setcollectionIdState] = useState("");
@@ -191,13 +124,13 @@ const CollectionList = (props) => {
       setModalState(!modalState);
   };
 
-  const deleteCollection = (rowIndex) => {
-    const id = collectionRef.current[rowIndex].uuid;
+  const deleteDigitalData = (rowIndex) => {
+    const id = digitalDataRef.current[rowIndex].uuid;
     toggleModalDelete(id);
 
   };
-  const deleteDataCollection = async (collectionId) => {
-    await axios.delete(`http://localhost:5000/collections/${collectionId}`);
+  const deleteDataDigitalDB = async (digitalDataId) => {
+    await axios.delete(`http://localhost:5000/digital-data/${digitalDataId}`);
     toggleModalDelete();
     toggleModal();
   }
@@ -216,6 +149,7 @@ const CollectionList = (props) => {
 
   const columns = useMemo(
     () => [
+         // When using the useFlexLayout:
       {
         Header: "No",
         accessor: "no",
@@ -229,40 +163,19 @@ const CollectionList = (props) => {
         },
       },
       {
-        Header: "Nomor BP",
-        accessor: "no_bp",
-      },
-      {
-        Header: "ISBN",
-        accessor: "isbn",
-      },
-      {
         Header: "Judul",
         accessor: "title",
+        maxWidth: 1000,
+        minWidth: 140,
+        width: 500,
       },
       {
-        Header: "Penulis",
-        accessor: "writer",
+        Header: "Format Digital",
+        accessor: "digital_format.digital_format",
       },
       {
-        Header: "Tahun Terbit Cetakan ke-1",
-        accessor: "publish_1st_year",
-      },
-      {
-        Header: "Tahun Terbit Cetakan Terakhir",
-        accessor: "publish_last_year",
-      },
-      {
-        Header: "Kategori",
-        accessor: "category.category",
-      },
-      {
-        Header: "Jenis Cerita",
-        accessor: "story_type.story_type",
-      },
-      {
-        Header: "Bahasa",
-        accessor: "language.language",
+        Header: "ID",
+        accessor: "id",
       },
       {
         Header: "Actions",
@@ -271,15 +184,11 @@ const CollectionList = (props) => {
           const rowIdx = props.row.id;
           return (
             <div>
-              <span onClick={() => openCollection(rowIdx)}>
-                <button className='button bulma is-small is-rounded is-info mr-2'> <IoEye></IoEye></button>
-              </span>
-
-              <span onClick={() => editCollection(rowIdx)}>
+              <span onClick={() => editDigitalData(rowIdx)}>
                 <button className='button bulma is-small is-rounded is-warning mr-2'> <IoPencil></IoPencil></button>
               </span>
 
-              <span onClick={() => deleteCollection(rowIdx)}>
+              <span onClick={() => deleteDigitalData(rowIdx)}>
               <button className='button bulma is-small is-rounded is-danger mr-2'> <IoTrash></IoTrash></button>
               </span>
             </div>
@@ -298,51 +207,30 @@ const CollectionList = (props) => {
     prepareRow,
   } = useTable(
     {
-      columns,
-      data: collection,
+        columns,
+        data: digitalData,
     },
-    // useFlexLayout
+    useFlexLayout
   );
 
   const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
   const fileExtension = '.xlsx';
   var today = new Date(),
   date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()+'-'+today.getTime();
-  const fileName = date+'_Koleksi';
+  const fileName = date+'_Data-Digital';
 
   const exportToExcel = async () => {
     try {
-      const params = getRequestParams(searchInput, category, story_type, language, page, pageSize);
-        await axios.get('http://localhost:5000/collections-export', {params: params})
+      const params = getRequestParams(searchInput, digitalFormat, page, pageSize);
+        await axios.get('http://localhost:5000/digital-data-export', {params: params})
         .then((response) => {
             const dataCollection = [];
             let i = 1;
-            response.data.forEach(element => {
-              let digital_data = "";
-              if(element.digital_collections){
-                let j = 1;
-                element.digital_collections.forEach(data => {
-                  if(j>1 && j !== element.digital_collections.length-1){
-                    digital_data+=", "
-                  }
-                  digital_data += data.digital_datum.digital_format.digital_format
-                  j += 1;
-                });
-              }
-              
+            response.data.forEach(element => {              
               dataCollection.push({
                 "No" : i,
-                "No BP" : element.no_bp,
-                "ISBN" : element.isbn,
                 "Judul" : element.title,
-                "Penulis" : element.writer,
-                "Tahun Terbit Cetakan Pertama" : element.publish_1st_year,
-                "Tahun Terbit Cetakan Terakhir" : element.publish_last_year,
-                "Jumlah Cetakan" : element.amount_printed,
-                "Kategori" : element.category.category,
-                "Jenis Cerita" : element.story_type.story_type,
-                "Bahasa" : element.language.language,
-                "Data Digital" : digital_data
+                "Format Digital" : element.digital_format.digital_format,
               })
               i += 1;
             });
@@ -371,8 +259,8 @@ const CollectionList = (props) => {
   
   return (
     <div className="list rowcolumns">
-      <h1 className='title has-text-centered mt-3'>Koleksi</h1>
-      <h2 className='subtitle has-text-centered'>Daftar Koleksi</h2>  
+      <h1 className='title has-text-centered mt-3'>Data Digital</h1>
+      <h2 className='subtitle has-text-centered'>Daftar Data Digital</h2>  
       <br /><br />    
       <div className="columns">
         <div className="column is-one-quarter">
@@ -392,45 +280,13 @@ const CollectionList = (props) => {
               <Select
                   className="basic-single"
                   classNamePrefix="select"
-                  defaultValue={categoryOptions[0]}
+                  defaultValue={digitalFormatOptions[0]}
                   isClearable="true"
                   isSearchable="true"
-                  value={category} 
-                  onChange={(e) => setCategory(e)}
-                  options={categoryOptions}
-                  placeholder="Filter Kategori.."
-              ></Select>
-            </div>
-          </div>
-          </div>
-          <div className="column is-one-quarter">
-          <div className="field">
-            <div className="control">
-              <Select
-                  className="basic-single"
-                  classNamePrefix="select"
-                  defaultValue={storyTypeOptions[0]}
-                  isClearable="true"
-                  isSearchable="true"
-                  value={story_type} 
-                  onChange={(e) => setStoryType(e)}
-                  options={storyTypeOptions}
-                  placeholder="Filter Jenis Cerita.."
-              ></Select>
-            </div>
-          </div>
-          <div className="field">
-            <div className="control">
-              <Select
-                  className="basic-single"
-                  classNamePrefix="select"
-                  defaultValue={languageOptions[0]}
-                  isClearable="true"
-                  isSearchable="true"
-                  value={language} 
-                  onChange={(e) => setLanguage(e)}
-                  options={languageOptions}
-                  placeholder="Filter Bahasa.."
+                  value={digitalFormat} 
+                  onChange={(e) => setDigitalFormat(e)}
+                  options={digitalFormatOptions}
+                  placeholder="Filter Format Digital.."
               ></Select>
             </div>
           </div>
@@ -478,7 +334,7 @@ const CollectionList = (props) => {
 
         <div style={{overflowX: "auto"}}>
         <table
-          className="table is-striped is-bordered is-fullWidth"
+          className="table is-striped is-bordered"
           {...getTableProps()}
         >
           <thead>
@@ -507,13 +363,12 @@ const CollectionList = (props) => {
             })}
           </tbody>
         </table>
-        <DeleteConfirmation confirmModal={deleteDataCollection} hideModal={toggleModalDelete} modalState={modalDeleteState} dataId={collectionIdState}  />
+        <DeleteConfirmation confirmModal={deleteDataDigitalDB} hideModal={toggleModalDelete} modalState={modalDeleteState} dataId={collectionIdState}  />
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data Berhasil Dihapus"}  />
-
         </div>
       </div>
     </div>
   );
 };
 
-export default CollectionList;
+export default DigitalDataList;
