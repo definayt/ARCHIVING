@@ -7,11 +7,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import DeleteConfirmation from './DeleteConfirmation';
 import SuccessModal from './SuccessModal';
 import axios from 'axios';
+import Select from 'react-select';
 
 const CollectionList = (props) => {
   const navigate = useNavigate();
   const [collection, setCollection] = useState([]);
-  const [searchTitle, setSearchTitle] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const collectionRef = useRef();
 
   const [page, setPage] = useState(1);
@@ -22,16 +23,108 @@ const CollectionList = (props) => {
 
   collectionRef.current = collection;
 
-  const onChangeSearchTitle = (e) => {
-    const searchTitle = e.target.value;
-    setSearchTitle(searchTitle);
+  const onChangeSearchInput = (e) => {
+    const searchInput = e.target.value;
+    setSearchInput(searchInput);
   };
 
-  const getRequestParams = (searchTitle, page, pageSize) => {
-    let params = {};
+  const [category, setCategory] = useState("");
+  const [story_type, setStoryType] = useState("");
+  const [language, setLanguage] = useState("");
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [storyTypeOptions, setStoryTypeOptions] = useState([]);
+  const [languageOptions, setLanguageOptions] = useState([]);
+  const getCategories = async () => {
+    await axios.get('http://localhost:5000/categories')
+        .then((response) => {
+            let arr = [];
+            response.data.forEach(datum => {
+                arr.push({
+                    value : datum.id,
+                    label : datum.category
+                });
+            });
+            setCategoryOptions(arr);
+        })
+        .catch((error) => {
+            // Error
+            switch (error.response.status) {
+                case 403:
+                    navigate("/403");
+                    break;
+                default:
+                    break
+            }
+        });
+  };
+  const getStoryTypes = async () => {
+      await axios.get('http://localhost:5000/story-types')
+          .then((response) => {
+              let arr = [];
+              response.data.forEach(datum => {
+                  arr.push({
+                      value : datum.id,
+                      label : datum.story_type
+                  });
+              });
+              setStoryTypeOptions(arr);
+          })
+          .catch((error) => {
+              // Error
+              switch (error.response.status) {
+                  case 403:
+                      navigate("/403");
+                      break;
+                  default:
+                      break
+              }
+          });
+  };
+  const getLanguages = async () => {
+      await axios.get('http://localhost:5000/languages')
+          .then((response) => {
+              let arr = [];
+              response.data.forEach(datum => {
+                  arr.push({
+                      value : datum.id,
+                      label : datum.language
+                  });
+              });
+              setLanguageOptions(arr);
+          })
+          .catch((error) => {
+              // Error
+              switch (error.response.status) {
+                  case 403:
+                      navigate("/403");
+                      break;
+                  default:
+                      break
+              }
+          });
+  };
+  useEffect(()=>{
+      getCategories();
+      getStoryTypes();
+      getLanguages();
+  }, []);
 
-    if (searchTitle) {
-      params["title"] = searchTitle;
+  const getRequestParams = (searchInput, category, story_type, language, page, pageSize) => {
+    let params = {};
+    if(category){
+      params["category"] = category.value;
+    }
+
+    if(story_type){
+      params["story_type"] = story_type.value;
+    }
+
+    if(language){
+      params["language"] = language.value;
+    }
+
+    if (searchInput) {
+      params["input"] = searchInput;
     }
 
     if (page) {
@@ -46,7 +139,7 @@ const CollectionList = (props) => {
   };
 
   const retrieveCollection = () => {
-    const params = getRequestParams(searchTitle, page, pageSize);
+    const params = getRequestParams(searchInput, category, story_type, language, page, pageSize);
 
     CollectionService.getAll(params)
       .then((response) => {
@@ -209,27 +302,75 @@ const CollectionList = (props) => {
   return (
     <div className="list rowcolumns">
       <h1 className='title has-text-centered mt-3'>Koleksi</h1>
-      <h2 className='subtitle has-text-centered'>Daftar Koleksi</h2>
-      
-      
+      <h2 className='subtitle has-text-centered'>Daftar Koleksi</h2>  
+      <br /><br />    
       <div className="columns">
         <div className="column is-one-quarter">
-          <input
-            type="text"
-            className="input"
-            placeholder="Cari Data"
-            value={searchTitle}
-            onChange={onChangeSearchTitle}
-          />
+          <div className="field">
+            <div className="control">
+              <input
+                type="text"
+                className="input"
+                placeholder="Cari Data"
+                value={searchInput}
+                onChange={onChangeSearchInput}
+              />
+            </div>
           </div>
-          <div className="column">
+          <div className="field">
+            <div className="control">
+              <Select
+                  className="basic-single"
+                  classNamePrefix="select"
+                  defaultValue={categoryOptions[0]}
+                  isClearable="true"
+                  isSearchable="true"
+                  value={category} 
+                  onChange={(e) => setCategory(e)}
+                  options={categoryOptions}
+                  placeholder="Filter Kategori.."
+              ></Select>
+            </div>
+          </div>
+          </div>
+          <div className="column is-one-quarter">
+          <div className="field">
+            <div className="control">
+              <Select
+                  className="basic-single"
+                  classNamePrefix="select"
+                  defaultValue={storyTypeOptions[0]}
+                  isClearable="true"
+                  isSearchable="true"
+                  value={story_type} 
+                  onChange={(e) => setStoryType(e)}
+                  options={storyTypeOptions}
+                  placeholder="Filter Jenis Cerita.."
+              ></Select>
+            </div>
+          </div>
+          <div className="field">
+            <div className="control">
+              <Select
+                  className="basic-single"
+                  classNamePrefix="select"
+                  defaultValue={languageOptions[0]}
+                  isClearable="true"
+                  isSearchable="true"
+                  value={language} 
+                  onChange={(e) => setLanguage(e)}
+                  options={languageOptions}
+                  placeholder="Filter Bahasa.."
+              ></Select>
+            </div>
+          </div>
+          <div className="buttons is-right">
             <button
               className="button is-link"
               type="button"
               onClick={findByTitle}
-            >
-              Cari
-            </button>
+            >Cari</button>
+          </div>
           </div>
           <div className="column">
             <div className="buttons is-right">
@@ -240,26 +381,33 @@ const CollectionList = (props) => {
       </div>
 
       <div className="is-fullWidth">
-        <div className="my-3">
-          {"Data per Halaman: "}
-          <select className="select is-primary" onChange={handlePageSizeChange} value={pageSize}>
-            {pageSizes.map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
-            ))}
-          </select>
-
-          <Pagination
-            className="my-3"
-            count={count}
-            page={page}
-            siblingCount={1}
-            boundaryCount={1}
-            variant="outlined"
-            shape="rounded"
-            onChange={handlePageChange}
-          />
+        <div className="columns">
+          <div className="column is-1">
+            {"Data per Halaman : "}
+          </div>
+          <div className="column is-1">
+            <select className="input" onChange={handlePageSizeChange} value={pageSize}>
+              {pageSizes.map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="column">
+            <div className="is-pulled-right">
+              <Pagination
+                className=""
+                count={count}
+                page={page}
+                siblingCount={1}
+                boundaryCount={1}
+                variant="outlined"
+                shape="rounded"
+                onChange={handlePageChange}
+              />
+            </div>
+          </div>
         </div>
 
         <div style={{overflowX: "auto"}}>
