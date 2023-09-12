@@ -8,7 +8,6 @@ import db from "../config/Database.js";
 import DigitalData from "../models/DigitalDataModel.js";
 import DigitalFormat from "../models/DigitalFormatModel.js";
 import xlsx from "xlsx";
-import path from "path";
 const Op = db.Sequelize.Op;
 
 export const getCollections = async(req, res) => {
