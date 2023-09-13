@@ -10,8 +10,20 @@ import axios from 'axios';
 import Select from 'react-select';
 import * as FileSaver from 'file-saver';
 import XLSX from 'sheetjs-style';
+import ExportCollectionModal from "./ExportCollectionModal";
+import RRMultiSelect from 'rr-multi-select';
+import { useSelector } from 'react-redux';
 
 const CollectionList = (props) => {
+  
+  const {user} = useSelector((state => state.auth));
+  var buttonAdd = "block";
+  var actionButton = "actions";
+  if((user && (user.role === "non-pustakawan" || user.role === "guest"))){
+    buttonAdd = "none";
+  }else{
+    actionButton = "";
+  }
   const navigate = useNavigate();
   const [collection, setCollection] = useState([]);
   const [searchInput, setSearchInput] = useState("");
@@ -33,9 +45,11 @@ const CollectionList = (props) => {
   const [category, setCategory] = useState("");
   const [story_type, setStoryType] = useState("");
   const [language, setLanguage] = useState("");
+  const [digital_format, setDigitalFormat] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [storyTypeOptions, setStoryTypeOptions] = useState([]);
   const [languageOptions, setLanguageOptions] = useState([]);
+  const [digitalFormatOptions, setDigitalFormatOptions] = useState([]);
   const getCategories = async () => {
     await axios.get('http://localhost:5000/categories')
         .then((response) => {
@@ -105,13 +119,37 @@ const CollectionList = (props) => {
               }
           });
   };
+  const getDigitalFormat = async () => {
+    await axios.get('http://localhost:5000/digital-format')
+        .then((response) => {
+            let arr = [];
+            response.data.forEach(datum => {
+                arr.push({
+                    value : datum.id,
+                    label : datum.digital_format
+                });
+            });
+            setDigitalFormatOptions(arr);
+        })
+        .catch((error) => {
+            // Error
+            switch (error.response.status) {
+                case 403:
+                    navigate("/403");
+                    break;
+                default:
+                    break
+            }
+        });
+  };
   useEffect(()=>{
       getCategories();
       getStoryTypes();
       getLanguages();
+      getDigitalFormat();
   }, []);
 
-  const getRequestParams = (searchInput, category, story_type, language, page, pageSize) => {
+  const getRequestParams = (searchInput, category, story_type, language, digital_format, page, pageSize) => {
     let params = {};
     if(category){
       params["category"] = category.value;
@@ -123,6 +161,14 @@ const CollectionList = (props) => {
 
     if(language){
       params["language"] = language.value;
+    }
+
+    if(digital_format){
+      let digitalFormatId = [];
+      digital_format.forEach(element => {
+        digitalFormatId.push(element.value);
+      });
+      params["digital_format"] = digitalFormatId;
     }
 
     if (searchInput) {
@@ -141,12 +187,26 @@ const CollectionList = (props) => {
   };
 
   const retrieveCollection = () => {
-    const params = getRequestParams(searchInput, category, story_type, language, page, pageSize);
+    const params = getRequestParams(searchInput, category, story_type, language, digital_format, page, pageSize);
 
     Service.getAllCollection(params)
       .then((response) => {
         const { collection, totalPages } = response.data;
-
+        collection.forEach(element => {
+          let digital_data = "";
+          if(element.digital_collections){
+            let j = 1;
+            element.digital_collections.forEach(data => {
+              if(j>1 && j !== element.digital_collections.length-1){
+                digital_data+=", "
+              }
+              digital_data += data.digital_datum.digital_format.digital_format
+              j += 1;
+            });
+          }
+          element["digital_data"] = digital_data;
+          console.log(digital_data);
+        });
         setCollection(collection);
         setCount(totalPages);
 
@@ -201,6 +261,10 @@ const CollectionList = (props) => {
     toggleModalDelete();
     toggleModal();
   }
+  const [modalExportState, setModalExportState] = useState(false);
+  const toggleModalExport = () => {
+      setModalExportState(!modalExportState);
+  };
   const navigation = () => {
     window.location.reload(false);
   };
@@ -213,7 +277,7 @@ const CollectionList = (props) => {
     setPageSize(event.target.value);
     setPage(1);
   };
-
+  
   const columns = useMemo(
     () => [
       {
@@ -265,7 +329,11 @@ const CollectionList = (props) => {
         accessor: "language.language",
       },
       {
-        Header: "Actions",
+        Header: "Data Digital",
+        accessor: "digital_data",
+      },
+      {
+        Header: "Aksi",
         accessor: "actions",
         Cell: (props) => {
           const rowIdx = props.row.id;
@@ -300,9 +368,24 @@ const CollectionList = (props) => {
     {
       columns,
       data: collection,
+      initialState: {
+        hiddenColumns: actionButton
+      }
     },
     // useFlexLayout
   );
+
+  const [checkboxExportNoBP, setCheckboxExportNoBP] = useState(true);
+  const [checkboxExportISBN, setCheckboxExportISBN] = useState(true);
+  const [checkboxExportTitle, setCheckboxExportTitle] = useState(true);
+  const [checkboxExportWriter, setCheckboxExportWriter] = useState(true);
+  const [checkboxExport1stYear, setCheckboxExport1stYear] = useState(true);
+  const [checkboxExportLastYear, setCheckboxExportlastYear] = useState(true);
+  const [checkboxExportAmount, setCheckboxExportAmount] = useState(true);
+  const [checkboxExportCategory, setCheckboxExportCategory] = useState(true);
+  const [checkboxExportStoryType, setCheckboxExportStoryType] = useState(true);
+  const [checkboxExportLanguage, setCheckboxExportLanguage] = useState(true);
+  const [checkboxExportDataDigital, setCheckboxExportDataDigital] = useState(true);
 
   const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
   const fileExtension = '.xlsx';
@@ -312,7 +395,7 @@ const CollectionList = (props) => {
 
   const exportToExcel = async () => {
     try {
-      const params = getRequestParams(searchInput, category, story_type, language, page, pageSize);
+      const params = getRequestParams(searchInput, category, story_type, language, digital_format, page, pageSize);
         await axios.get('http://localhost:5000/collections-export', {params: params})
         .then((response) => {
             const dataCollection = [];
@@ -329,21 +412,42 @@ const CollectionList = (props) => {
                   j += 1;
                 });
               }
-              
-              dataCollection.push({
-                "No" : i,
-                "No BP" : element.no_bp,
-                "ISBN" : element.isbn,
-                "Judul" : element.title,
-                "Penulis" : element.writer,
-                "Tahun Terbit Cetakan Pertama" : element.publish_1st_year,
-                "Tahun Terbit Cetakan Terakhir" : element.publish_last_year,
-                "Jumlah Cetakan" : element.amount_printed,
-                "Kategori" : element.category.category,
-                "Jenis Cerita" : element.story_type.story_type,
-                "Bahasa" : element.language.language,
-                "Data Digital" : digital_data
-              })
+              let datum = {};
+              datum["No"] = i;
+              if(checkboxExportNoBP === true){
+                datum["No BP"] = element.no_bp;
+              }
+              if(checkboxExportISBN === true){
+                datum["ISBN"] = element.isbn;
+              }
+              if(checkboxExportTitle === true){
+                datum["Judul"] = element.title;
+              }
+              if(checkboxExportWriter === true){
+                datum["Penulis"] = element.writer;
+              }
+              if(checkboxExport1stYear === true){
+                datum["Tahun Terbit Cetakan Pertama"] = element.publish_1st_year;
+              }
+              if(checkboxExportLastYear === true){
+                datum["Tahun Terbit Cetakan Terakhir"] = element.publish_last_year;
+              }
+              if(checkboxExportAmount === true){
+                datum["Jumlah Cetakan"] = element.amount_printed;
+              }
+              if(checkboxExportCategory === true){
+                datum["Kategori"] = element.category.category;
+              }
+              if(checkboxExportStoryType === true){
+                datum["Jenis Cerita"] = element.story_type.story_type;
+              }
+              if(checkboxExportLanguage === true){
+                datum["Bahasa"] = element.language.language;
+              }
+              if(checkboxExportDataDigital === true){
+                datum["Data Digital"] = digital_data;
+              }
+              dataCollection.push(datum);
               i += 1;
             });
             const ws = XLSX.utils.json_to_sheet(dataCollection);
@@ -402,8 +506,23 @@ const CollectionList = (props) => {
               ></Select>
             </div>
           </div>
-          </div>
-          <div className="column is-one-quarter">
+          {/* <div className="field">
+            <div className="control">
+              <Select
+                  className="basic-single"
+                  classNamePrefix="select"
+                  defaultValue={storyTypeOptions[0]}
+                  isClearable="true"
+                  isSearchable="true"
+                  value={story_type} 
+                  onChange={(e) => setStoryType(e)}
+                  options={storyTypeOptions}
+                  placeholder="Filter Jenis Cerita.."
+              ></Select>
+            </div>
+          </div> */}
+        </div>
+        <div className="column is-one-quarter">
           <div className="field">
             <div className="control">
               <Select
@@ -434,14 +553,26 @@ const CollectionList = (props) => {
               ></Select>
             </div>
           </div>
+          {/* <div className="field">
+            <div className="control">
+                <RRMultiSelect
+                    classNamePrefix="select"
+                    options={digitalFormatOptions}
+                    isObject={["value","label"]}
+                    value={digital_format}
+                    onChange={setDigitalFormat}
+                    inputPlaceholder="Filter Format Digital.."
+                />
+            </div>
+          </div> */}
           <div className="buttons is-right">
             <button className="button is-link is-outlined" type="button" onClick={findByTitle}>Cari</button>
-            <button className="button is-success is-outlined" onClick={exportToExcel}>Cetak</button>
+            <button className="button is-success is-outlined" onClick={toggleModalExport}>Cetak</button>
           </div>
           </div>
           <div className="column">
             <div className="buttons is-right">
-                <Link to={"/collections/add"} className='button is-primary mb-2'>Tambah</Link>
+                <Link to={"/collections/add"} className='button is-primary mb-2' style={{display: buttonAdd}}>Tambah</Link>
             </div>
           </div>
       </div>
@@ -478,7 +609,7 @@ const CollectionList = (props) => {
 
         <div style={{overflowX: "auto"}}>
         <table
-          className="table is-striped is-bordered is-fullWidth"
+          className="table is-striped is-bordered is-fullWidth" style={{fontSize: "15px"}}
           {...getTableProps()}
         >
           <thead>
@@ -509,7 +640,22 @@ const CollectionList = (props) => {
         </table>
         <DeleteConfirmation confirmModal={deleteDataCollection} hideModal={toggleModalDelete} modalState={modalDeleteState} dataId={collectionIdState}  />
         <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Data Berhasil Dihapus"}  />
-
+        <ExportCollectionModal 
+          confirmModal={exportToExcel} 
+          hideModal={toggleModalExport} 
+          modalState={modalExportState} 
+          dataIdNoBP={checkboxExportNoBP}  dataChangeNoBP={setCheckboxExportNoBP} 
+          dataIdISBN = {checkboxExportISBN} dataChangeISBN = {setCheckboxExportISBN}
+          dataIdTitle ={checkboxExportTitle} dataChangeTitle = {setCheckboxExportTitle}
+          dataIdWriter = {checkboxExportWriter} dataChangeWriter = {setCheckboxExportWriter}
+          dataId1stYear = {checkboxExport1stYear} dataChange1stYear = {setCheckboxExport1stYear}
+          dataIdLastYear = {checkboxExportLastYear} dataChangeLastYear = {setCheckboxExportlastYear}
+          dataIdAmount = {checkboxExportAmount} dataChangeAmount = {setCheckboxExportAmount}
+          dataIdCategory = {checkboxExportCategory} dataChangeCategory = {setCheckboxExportCategory}
+          dataIdStoryType = {checkboxExportStoryType} dataChengeStoryType = {setCheckboxExportStoryType}
+          dataIdLanguage = {checkboxExportLanguage} dataChangeLanguage = {setCheckboxExportLanguage}
+          dataIdDataDigital = {checkboxExportDataDigital} dataChangeDataDigital = {setCheckboxExportDataDigital}
+          />
         </div>
       </div>
     </div>

@@ -11,7 +11,7 @@ import { verifyUser, pustakawanAndSuperAdminOnly } from "../middleware/AuthUser.
 
 const router = express.Router();
 
-router.get('/categories', verifyUser, pustakawanAndSuperAdminOnly, getCategories);
+router.get('/categories', verifyUser, getCategories);
 router.get('/categories/:id', verifyUser, pustakawanAndSuperAdminOnly, getCategoryById);
 router.post('/categories', verifyUser, pustakawanAndSuperAdminOnly, createCategory);
 router.patch('/categories/:id', verifyUser, pustakawanAndSuperAdminOnly, updateCategory);

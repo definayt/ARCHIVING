@@ -18,9 +18,6 @@ const DigitalDataList = () => {
         if(isError){
             navigate("/");
         }
-        // if((user && (user.role === "non-pustakawan" || user.role === "guest"))){
-        //     navigate("/403");
-        // }
     }, [isError, user, navigate]);
   return (
     <Layout>

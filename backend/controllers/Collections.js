@@ -299,7 +299,7 @@ const getPagingData = (data, page, limit) => {
 };
 
 export const findAllCollection = (req, res) => {
-    const { page, size, input, category, story_type, language } = req.query;
+    const { page, size, input, category, story_type, language, digital_format } = req.query;
     if(category && story_type && language){
         var condition = input ? { 
             [Op.and] : {
@@ -448,6 +448,10 @@ export const findAllCollection = (req, res) => {
             }
         } : null;
     }
+    
+    // var conditionDigitalFormat = digital_format ? { 
+    //     digitalFormatId : { [Op.in] : digital_format }
+    // } : null;
 
     const { limit, offset } = getPagination(page, size);
 
@@ -469,13 +473,15 @@ export const findAllCollection = (req, res) => {
                     { 
                         model: DigitalData, 
                         attributes: ['file_digital'],
+                        // where: conditionDigitalFormat,
                         include: [
                             { model: DigitalFormat, attributes: ['digital_format'] }
-                        ]
+                        ],
                         }
                 ]
                 },
         ],
+        distinct: true,
     })
     .then(data => {
     const response = getPagingData(data, page, limit);
@@ -572,7 +578,7 @@ export const countPublished1stYear = async (req, res) => {
 }
 
 export const exportExcelCollections = async(req, res) => {
-    const { page, size, input, category, story_type, language } = req.query;
+    const { page, size, input, category, story_type, language, digital_format } = req.query;
     if(category && story_type && language){
         var condition = input ? { 
             [Op.and] : {
@@ -721,17 +727,19 @@ export const exportExcelCollections = async(req, res) => {
             }
         } : null;
     }
+    // var conditionDigitalFormat = digital_format ? { 
+    //     digitalFormatId : { [Op.in] : digital_format }
+    // } : null;
     try {
         const response = await Collections.findAll({
             where: condition,
             attributes: ['uuid', 'no_bp', 'isbn', 'title', 'writer', 'publish_1st_year', 
-                    'publish_last_year', 'amount_printed', 'synopsis', 'categoryId'
-                ],
+                            'publish_last_year', 'amount_printed', 'synopsis'
+                        ],
             include:[
                 { model: Categories, attributes: ['category'] }, 
                 { model: StoryType, attributes: ['story_type'] }, 
-                { model: Languages, attributes: ['language'] }, 
-                { model: Users, attributes: ['name'] }, 
+                { model: Languages, attributes: ['language'] },  
                 { 
                     model: DigitalCollections, 
                     attributes: ['uuid'], 
@@ -739,13 +747,15 @@ export const exportExcelCollections = async(req, res) => {
                         { 
                             model: DigitalData, 
                             attributes: ['file_digital'],
+                            // where: conditionDigitalFormat,
                             include: [
                                 { model: DigitalFormat, attributes: ['digital_format'] }
                             ]
                             }
                     ]
                     },
-            ]
+            ],
+             distinct: true,
         });
         res.status(200).json(response);
         

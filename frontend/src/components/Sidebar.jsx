@@ -1,11 +1,20 @@
 import React, {useState} from 'react';
-import {NavLink, useNavigate} from "react-router-dom";
+import {NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { LogOut, reset } from "../features/authSlice";
 import {IoPerson, IoHome, IoLogOut, IoBook, IoDocumentAttach,IoBookmark} from "react-icons/io5";
 import LogoutConfirmation from './LogoutConfirmation';
 
 const Sidebar = () => {
+    //assigning location variable
+    const location = useLocation();
+
+    //destructuring pathname from location
+    const { pathname } = location;
+
+    //Javascript split method to get the name of the path in array
+    const splitLocation = pathname.split("/");
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const {user} = useSelector((state => state.auth));
@@ -27,9 +36,9 @@ const Sidebar = () => {
                 General
             </p>
             <ul className="menu-list">
-                <li><NavLink to={"/dashboard"}> <IoHome/> Dashboard</NavLink></li>
-                <li><NavLink to={"/collection"}> <IoBook/> Data Koleksi</NavLink></li>
-                <li><NavLink to={"/digital-data"}> <IoDocumentAttach/> Data Digital</NavLink></li>
+                <li><NavLink className={splitLocation[1] === "dashboard" ? "is-active" : ""} to={"/dashboard"}> <IoHome/> Dashboard</NavLink></li>
+                <li><NavLink className={splitLocation[1] === "collection" || splitLocation[1] === "collections" ? "is-active" : ""} to={"/collection"}> <IoBook/> Data Koleksi</NavLink></li>
+                <li><NavLink className={splitLocation[1] === "digital-data" ? "is-active" : ""} to={"/digital-data"}> <IoDocumentAttach/> Data Digital</NavLink></li>
             </ul>
             {user && user.role === "super-admin" && (
                 <div>
@@ -37,7 +46,7 @@ const Sidebar = () => {
                         Super Admin
                     </p>
                     <ul className="menu-list">
-                        <li><NavLink to={"/users"}> <IoPerson/> Data User</NavLink></li>
+                        <li><NavLink className={splitLocation[1] === "users" ? "is-active" : ""} to={"/users"}> <IoPerson/> Data User</NavLink></li>
                         
                     </ul>
                 </div>
@@ -48,10 +57,10 @@ const Sidebar = () => {
                         Data Dukungan
                     </p>
                     <ul className="menu-list">
-                        <li><NavLink to={"/categories"}> <IoBookmark/> Kategori</NavLink></li>
-                        <li><NavLink to={"/story-types"}> <IoBookmark/> Jenis Cerita</NavLink></li>
-                        <li><NavLink to={"/languages"}> <IoBookmark/> Bahasa</NavLink></li>
-                        <li><NavLink to={"/digital-format"}> <IoBookmark/> Format Digital</NavLink></li>
+                        <li><NavLink className={splitLocation[1] === "categories" ? "is-active" : ""} to={"/categories"}> <IoBookmark/> Kategori</NavLink></li>
+                        <li><NavLink className={splitLocation[1] === "story-types" ? "is-active" : ""} to={"/story-types"}> <IoBookmark/> Jenis Cerita</NavLink></li>
+                        <li><NavLink className={splitLocation[1] === "languages" ? "is-active" : ""} to={"/languages"}> <IoBookmark/> Bahasa</NavLink></li>
+                        <li><NavLink className={splitLocation[1] === "digital-format" ? "is-active" : ""} to={"/digital-format"}> <IoBookmark/> Format Digital</NavLink></li>
                     </ul>
                 </div>
             )}

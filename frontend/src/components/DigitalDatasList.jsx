@@ -10,8 +10,17 @@ import axios from 'axios';
 import Select from 'react-select';
 import * as FileSaver from 'file-saver';
 import XLSX from 'sheetjs-style';
+import { useSelector } from 'react-redux';
 
 const DigitalDataList = (props) => {
+  const {user} = useSelector((state => state.auth));
+  var buttonAdd = "block";
+  var actionButton = "actions";
+  if((user && (user.role === "non-pustakawan" || user.role === "guest"))){
+    buttonAdd = "none";
+  }else{
+    actionButton = "";
+  }
   const navigate = useNavigate();
   const [digitalData, setDigitalData] = useState([]);
   const [searchInput, setSearchInput] = useState("");
@@ -134,6 +143,7 @@ const DigitalDataList = (props) => {
     toggleModalDelete();
     toggleModal();
   }
+  
   const navigation = () => {
     window.location.reload(false);
   };
@@ -173,12 +183,12 @@ const DigitalDataList = (props) => {
         Header: "Format Digital",
         accessor: "digital_format.digital_format",
       },
+      // {
+      //   Header: "ID",
+      //   accessor: "id",
+      // },
       {
-        Header: "ID",
-        accessor: "id",
-      },
-      {
-        Header: "Actions",
+        Header: "Aksi",
         accessor: "actions",
         Cell: (props) => {
           const rowIdx = props.row.id;
@@ -209,6 +219,9 @@ const DigitalDataList = (props) => {
     {
         columns,
         data: digitalData,
+        initialState: {
+          hiddenColumns: actionButton
+        }
     },
     useFlexLayout
   );
@@ -297,7 +310,7 @@ const DigitalDataList = (props) => {
           </div>
           <div className="column">
             <div className="buttons is-right">
-                <Link to={"/collections/add"} className='button is-primary mb-2'>Tambah</Link>
+                <Link to={"/digital-data/add"} className='button is-primary mb-2' style={{display: buttonAdd}}>Tambah</Link>
             </div>
           </div>
       </div>

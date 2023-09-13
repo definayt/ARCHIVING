@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LoginUser, reset, getMe } from "../features/authSlice";
 
 const Login = () => {
@@ -32,7 +32,11 @@ const Login = () => {
           <div className="columns is-centered">
             <div className="column is-4">
                 <form onSubmit={Auth} className='box'>
-                    {isError && <p className='has-text-centered'>{message}</p>}
+                     {isError && <article className="message is-danger">
+                        <div className="message-body">
+                        {message}
+                        </div>
+                    </article> }
                     <h1 className='title is-2'>Login</h1>
                     <div className="field">
                         <label className="label">Email</label>
@@ -62,6 +66,12 @@ const Login = () => {
                        <button type='submit' className="button is-success is-fullwidth">
                             {isLoading ? 'Loading...' : 'Login'}
                         </button>
+                    </div>
+                    <p className='has-text-centered'>Belum memiliki akun?</p>
+                    <div className="field mt-3">
+                       <Link to={'/registration'} className="button is-primary is-fullwidth">
+                            {'Daftar'}
+                        </Link>
                     </div>
                 </form>
             </div>

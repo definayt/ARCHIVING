@@ -1,6 +1,7 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Login from "./components/Login";
+import Registration from "./components/Registration";
 import Users from "./pages/Users";
 import AddUser from "./pages/AddUser";
 import AddDigitalFormat from "./pages/AddDigitalFormat";
@@ -34,6 +35,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login/>}/>
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/registration" element={<Registration/>}/>
           <Route path="/dashboard" element={<Dashboard/>}/>
           <Route path="/403" element={<Page403/>}/>
           <Route path="/users" element={<Users/>}/>

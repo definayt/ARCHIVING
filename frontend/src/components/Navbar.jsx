@@ -87,7 +87,7 @@ const Navbar = () => {
             <div className="navbar-end">
               <div className="navbar-item">
                 <div className="buttons">
-                  <button onClick={() => toggleModal() } className="button is-light">
+                  <button onClick={() => toggleModal() } className="button is-danger">
                     Logout
                   </button>
                   <LogoutConfirmation confirmModal={logout} hideModal={toggleModal} modalState={modalState}  />

@@ -11,7 +11,7 @@ import { verifyUser, pustakawanAndSuperAdminOnly } from "../middleware/AuthUser.
 
 const router = express.Router();
 
-router.get('/digital-format', verifyUser, pustakawanAndSuperAdminOnly, getDigitalFormats);
+router.get('/digital-format', verifyUser, getDigitalFormats);
 router.get('/digital-format/:id', verifyUser, pustakawanAndSuperAdminOnly, getDigitalFormatById);
 router.post('/digital-format', verifyUser, pustakawanAndSuperAdminOnly, createDigitalFormat);
 router.patch('/digital-format/:id', verifyUser, pustakawanAndSuperAdminOnly, updateDigitalFormat);

@@ -11,7 +11,7 @@ import { verifyUser, pustakawanAndSuperAdminOnly } from "../middleware/AuthUser.
 
 const router = express.Router();
 
-router.get('/languages', verifyUser, pustakawanAndSuperAdminOnly, getLanguages);
+router.get('/languages', verifyUser, getLanguages);
 router.get('/languages/:id', verifyUser, pustakawanAndSuperAdminOnly, getLanguageById);
 router.post('/languages', verifyUser, pustakawanAndSuperAdminOnly, createLanguage);
 router.patch('/languages/:id', verifyUser, pustakawanAndSuperAdminOnly, updateLanguage);
