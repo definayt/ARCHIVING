@@ -85,6 +85,7 @@ const Registration = () => {
                                 value={name} 
                                 onChange={(e)=>setName(e.target.value)} 
                                 placeholder='Nama' 
+                                name='name'
                             />
                         </div>
                     </div>
@@ -97,6 +98,7 @@ const Registration = () => {
                                 value={email} 
                                 onChange={(e)=>setEmail(e.target.value)} 
                                 placeholder='Email' 
+                                name='email'
                             />
                         </div>
                     </div>
@@ -109,6 +111,7 @@ const Registration = () => {
                                 value={password} 
                                 onChange={(e)=>setPassword(e.target.value)} 
                                 placeholder="Password"
+                                name='password'
                             />
                         </div>
                     </div>
@@ -121,6 +124,7 @@ const Registration = () => {
                                 value={confPassword} 
                                 onChange={(e)=>setConfPassword(e.target.value)} 
                                 placeholder="Konfirmasi Password"
+                                name='confirmation-password'
                             />
                         </div>
                     </div>

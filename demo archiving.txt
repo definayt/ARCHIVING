@@ -1,0 +1,3 @@
+db name : balaipus_archiving_db_demo
+db username : balaipus_admin
+db password : cn(!xpRl23g(
