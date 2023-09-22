@@ -166,17 +166,28 @@ const Welcome = () => {
     });
 
     const dataTahunTerbit = [];
-    publish1stCollections.forEach(element => {
-      dataTahunTerbit.push({
-        "publish_1st_year": element.publish_1st_year,
-        "Total Koleksi" : element.countPublishYear
-      });
+    let countYear = 0;
+    let countNull = 0;
+    
+    Object.keys(publish1stCollections[0] || {}).forEach(function(key){
+      if(key !== "count"){
+        dataTahunTerbit.push({
+          "publish_1st_year": key,
+          "Total Koleksi" : publish1stCollections[0][key]
+        });
+        countYear+=publish1stCollections[0][key];
+      }else{
+        countNull = publish1stCollections[0][key]-countYear;
+      }
+    });
+    dataTahunTerbit.push({
+      "publish_1st_year": "Tidak ada",
+      "Total Koleksi" : countNull
     });
 
   return (
     <div>
         <h1 className='title has-text-centered mt-3'>Dashboard</h1>
-        {/* <h2 className='subtitle has-text-centered'>Welcome Back <strong>{user && user.name}</strong></h2> */}
         <div className='columns' style={{ height: '350px' }}>
           <div className='column is-half' style={{ height: '100%' }}>
             <h3 className='subtitle has-text-centered'>Total Koleksi <strong>{collections.countCollection}</strong> Judul</h3>
@@ -419,7 +430,7 @@ const Welcome = () => {
             />
           </div>
         </div>
-        <div className='columns' style={{ height: '2000px' }}>
+        <div className='columns' style={{ height: '350px' }}>
           <div className='column is-fullWidth' style={{height: "100%"}}>
             <h3 className='subtitle has-text-centered'>Tahun Terbit Cetakan Pertama</h3>
             <ResponsiveBar
@@ -429,7 +440,7 @@ const Welcome = () => {
               ]}
               layout='horizontal'
               indexBy="publish_1st_year"
-              margin={{ top: 0, right: 0, bottom: 100, left: 60 }}
+              margin={{ top: 0, right: 0, bottom: 100, left: 100 }}
               padding={0.3}
               valueScale={{ type: 'linear' }}
               indexScale={{ type: 'band', round: true }}
@@ -451,7 +462,7 @@ const Welcome = () => {
                   tickRotation: 0,
                   legend: 'Tahun Terbit Cetakan Pertama',
                   legendPosition: 'middle',
-                  legendOffset: -40
+                  legendOffset: -80
               }}
               axisBottom={{
                   tickSize: 5,

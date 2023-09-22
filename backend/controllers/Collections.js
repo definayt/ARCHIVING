@@ -9,6 +9,7 @@ import DigitalData from "../models/DigitalDataModel.js";
 import DigitalFormat from "../models/DigitalFormatModel.js";
 import xlsx from "xlsx";
 const Op = db.Sequelize.Op;
+import { Sequelize } from "sequelize";
 
 export const getCollections = async(req, res) => {
     try {
@@ -136,45 +137,67 @@ export const getCollectionById = async(req, res) => {
     }
 }
 
+async function isISBNUnique (isbn, uuid) {
+    let count;
+    if(uuid === ""){
+        count = await Collections.count({ where: { isbn: isbn } });
+    }else{
+        count = await Collections.count({ where: { isbn: isbn, uuid: { [Op.not]: uuid } } });
+    }
+    
+    if (count != 0) {
+        return false;
+    }
+    return true;
+}
+
 export const createCollection = async(req, res) => {
     const {no_bp, isbn, title, writer, publish_1st_year, publish_last_year, amount_printed,
         synopsis, categoryId, storyTypeId, languageId, digitalDataId
     } = req.body;
+    
     const trans = await db.transaction();
     const promises = [];
     let collectionId;
-    try{
-        await Collections.create({
-            no_bp: no_bp,
-            isbn: isbn,
-            title: title,
-            writer: writer,
-            publish_1st_year: publish_1st_year,
-            publish_last_year: publish_last_year,
-            amount_printed: amount_printed,
-            synopsis: synopsis,
-            categoryId: categoryId, 
-            storyTypeId: storyTypeId,
-            languageId: languageId,
-            userId: req.userId
-        }, {transaction : trans}).then(async function (result) {
-            collectionId = result.id;
-            if(digitalDataId.length){
-                digitalDataId.forEach( async element => {
-                    promises.push(DigitalCollections.create({
-                        collectionId: collectionId,
-                        digitalDataId: element
-                    }, { transaction: trans }));
+    isISBNUnique(isbn, "").then(async isUnique => {
+        if (isUnique) {
+            try{
+                await Collections.create({
+                    no_bp: no_bp,
+                    isbn: isbn,
+                    title: title,
+                    writer: writer,
+                    publish_1st_year: publish_1st_year,
+                    publish_last_year: publish_last_year,
+                    amount_printed: amount_printed,
+                    synopsis: synopsis,
+                    categoryId: categoryId, 
+                    storyTypeId: storyTypeId,
+                    languageId: languageId,
+                    userId: req.userId
+                }, {transaction : trans}).then(async function (result) {
+                    collectionId = result.id;
+                    if(digitalDataId.length){
+                        digitalDataId.forEach( async element => {
+                            promises.push(DigitalCollections.create({
+                                collectionId: collectionId,
+                                digitalDataId: element
+                            }, { transaction: trans }));
+                        });
+                    }
                 });
+                await Promise.allSettled(promises); 
+                await trans.commit();
+                res.status(201).json({msg: "Koleksi Berhasil Ditambahkan"});
+            } catch(error){
+                await trans.rollback();
+                res.status(400).json({msg: error.message});
             }
-        });
-        await Promise.allSettled(promises); 
-        await trans.commit();
-        res.status(201).json({msg: "Koleksi Berhasil Ditambahkan"});
-    } catch(error){
-        await trans.rollback();
-        res.status(400).json({msg: error.message});
-    }
+        }else{
+            res.status(400).json({msg: "Buku dengan ISBN "+isbn+" sudah ada"});
+        }
+    });
+    
 }
 
 export const updateCollection = async(req, res) => {
@@ -183,6 +206,7 @@ export const updateCollection = async(req, res) => {
             uuid: req.params.id
         }
     });
+    
     if(!collection) return res.status(404).json({msg: "Koleksi tidak ditemukan"});
     const {no_bp, isbn, title, writer, publish_1st_year, publish_last_year, amount_printed,
         synopsis, categoryId, storyTypeId, languageId, digitalDataId
@@ -190,47 +214,53 @@ export const updateCollection = async(req, res) => {
     const trans = await db.transaction();
     const promises = [];
     let collectionId;
-    try{
-        await Collections.update({
-            no_bp: no_bp,
-            isbn: isbn,
-            title: title,
-            writer: writer,
-            publish_1st_year: publish_1st_year,
-            publish_last_year: publish_last_year,
-            amount_printed: amount_printed,
-            synopsis: synopsis,
-            categoryId: categoryId, 
-            storyTypeId: storyTypeId,
-            languageId: languageId,
-            userId: req.userId
-        }, {
-            where: {
-                id: collection.id
-            },
-            transaction : trans
-        });
-        collectionId = collection.id;
-        await DigitalCollections.destroy({
-            where: {
-                collectionId: collection.id
+    isISBNUnique(isbn, req.params.id).then(async isUnique => {
+        if (isUnique) {
+            try{
+                await Collections.update({
+                    no_bp: no_bp,
+                    isbn: isbn,
+                    title: title,
+                    writer: writer,
+                    publish_1st_year: publish_1st_year,
+                    publish_last_year: publish_last_year,
+                    amount_printed: amount_printed,
+                    synopsis: synopsis,
+                    categoryId: categoryId, 
+                    storyTypeId: storyTypeId,
+                    languageId: languageId,
+                    userId: req.userId
+                }, {
+                    where: {
+                        id: collection.id
+                    },
+                    transaction : trans
+                });
+                collectionId = collection.id;
+                await DigitalCollections.destroy({
+                    where: {
+                        collectionId: collection.id
+                    }
+                }, { transaction: trans });
+                if(digitalDataId.length){
+                    digitalDataId.forEach( async element => {
+                        promises.push(DigitalCollections.create({
+                            collectionId: collectionId,
+                            digitalDataId: element
+                        }, { transaction: trans }));
+                    });
+                }
+                await Promise.allSettled(promises); 
+                await trans.commit();
+                res.status(200).json({msg: "Koleksi berhasil diubah"});
+            } catch(error){
+                await trans.rollback();
+                res.status(400).json({msg: error.message});
             }
-        }, { transaction: trans });
-        if(digitalDataId.length){
-            digitalDataId.forEach( async element => {
-                promises.push(DigitalCollections.create({
-                    collectionId: collectionId,
-                    digitalDataId: element
-                }, { transaction: trans }));
-            });
+        }else{
+            res.status(400).json({msg: "Buku dengan ISBN "+isbn+" sudah ada"});
         }
-        await Promise.allSettled(promises); 
-        await trans.commit();
-        res.status(200).json({msg: "Koleksi berhasil diubah"});
-    } catch(error){
-        await trans.rollback();
-        res.status(400).json({msg: error.message});
-    }
+    })
 }
 
 export const deleteCollection = async(req, res) => {
@@ -564,12 +594,25 @@ export const countLanguage = async (req, res) => {
 
 export const countPublished1stYear = async (req, res) => {
     try {
+        
         const response = await Collections.findAll({
+            where: {
+            //   publish_1st_year: {
+            //     [Op.not]: null,
+            //     [Op.notIn]: ['-']
+            //   }
+            },
             attributes: [
-              "publish_1st_year",
-              [db.fn("COUNT", db.col("publish_1st_year")), "countPublishYear"],
-            ],
-            group: "publish_1st_year",
+              [Sequelize.literal('COUNT (CASE WHEN publish_1st_year < 1900 THEN publish_1st_year END)'), '< 1900'],
+              [Sequelize.literal('COUNT (CASE WHEN publish_1st_year >= 1900 AND publish_1st_year <= 1919 THEN publish_1st_year END)'), '1900-1919'],
+              [Sequelize.literal('COUNT (CASE WHEN publish_1st_year >= 1920 AND publish_1st_year <= 1939 THEN publish_1st_year END)'), '1920-1939'],
+              [Sequelize.literal('COUNT (CASE WHEN publish_1st_year >= 1940 AND publish_1st_year <= 1959 THEN publish_1st_year END)'), '1940-1959'],
+              [Sequelize.literal('COUNT (CASE WHEN publish_1st_year >= 1960 AND publish_1st_year <= 1979 THEN publish_1st_year END)'), '1960-1979'],
+              [Sequelize.literal('COUNT (CASE WHEN publish_1st_year >= 1980 AND publish_1st_year <= 1999 THEN publish_1st_year END)'), '1980-1999'],
+              [Sequelize.literal('COUNT (CASE WHEN publish_1st_year >= 2000 AND publish_1st_year <= 2019 THEN publish_1st_year END)'), '2000-2019'],
+              [Sequelize.literal('COUNT (CASE WHEN publish_1st_year >= 2020 THEN publish_1st_year END)'), '≥ 2020'],
+              [Sequelize.fn('count', Sequelize.col('uuid')), 'count']
+            ]
           });
         res.status(200).json(response);
     } catch (error) {

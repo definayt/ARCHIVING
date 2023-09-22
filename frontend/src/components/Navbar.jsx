@@ -24,10 +24,10 @@ const Navbar = () => {
     };
   return (
     <div>
-        <nav className="navbar is-fixed-top has-shadow" role="navigation" aria-label="main navigation">
+        <nav className="navbar is-fixed-top has-shadow" role="navigation" aria-label="main navigation" style={{minHeight: "5rem"}}>
           <div className="navbar-brand">
             <NavLink to="/dashboard" className="navbar-item">
-              <img src={logo} width="" height="50" alt='Logo Balai Pustaka' />
+              <img src={logo} style={{minHeight: "3.5rem"}} alt='Logo Balai Pustaka' />
             </NavLink>
         
             <a 
