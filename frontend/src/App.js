@@ -11,7 +11,6 @@ import EditDigitalFormat from "./pages/EditDigitalFormat";
 import EditLanguage from "./pages/EditLanguage";
 import Page403 from "./pages/Page403";
 import Collections from "./pages/Collections";
-import DigitalData from "./pages/DigitalData";
 import Categories from "./pages/Categories";
 import StoryTypes from "./pages/StoryTypes";
 import Languages from "./pages/Languages";
@@ -24,10 +23,14 @@ import AddDigitalData from "./pages/AddDigitalData";
 import EditDigitalData from "./pages/EditDigitalData";
 import AddCollection from "./pages/AddCollection";
 import EditCollection from "./pages/EditCollection";
-
 import CollectionList from "./pages/CollectionList";
 import DigitalDataList from "./pages/DigitalDataList";
 import PageViewCollection from "./pages/PageViewCollection";
+import CollectionsDataDigital from "./pages/CollectionsDataDigital";
+import CollectionsCategory from "./pages/CollectionsCategory";
+import CollectionsStoryType from "./pages/CollectionsStoryType";
+import CollectionsLanguage from "./pages/CollectionsLanguage";
+import CollectionsPublish1stYear from "./pages/CollectionsPublish1stYear";
 
 function App() {
   return (
@@ -46,6 +49,11 @@ function App() {
           <Route path="/collections/add" element={<AddCollection/>}/>
           <Route path="/collections/edit/:id" element={<EditCollection/>} />
           <Route path="/collections/view/:id" element={<PageViewCollection/>} />
+          <Route path="/collections/data-digital" element={<CollectionsDataDigital/>}/>
+          <Route path="/collections/category" element={<CollectionsCategory/>}/>
+          <Route path="/collections/story-type" element={<CollectionsStoryType/>}/>
+          <Route path="/collections/language" element={<CollectionsLanguage/>}/>
+          <Route path="/collections/publish-year" element={<CollectionsPublish1stYear/>}/>
           <Route path="/digital-data" element={<DigitalDataList/>}/>
           <Route path="/digital-data/add" element={<AddDigitalData/>}/>
           <Route path="/digital-data/edit/:id" element={<EditDigitalData/>}/>

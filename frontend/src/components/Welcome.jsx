@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ResponsivePie } from '@nivo/pie';
 import { ResponsiveBar } from '@nivo/bar';
+import { Link } from 'react-router-dom';
 import '../App.css';
 
 const Welcome = () => {
@@ -191,302 +192,312 @@ const Welcome = () => {
         <div className='columns' style={{ height: '350px' }}>
           <div className='column is-half' style={{ height: '100%' }}>
             <h3 className='subtitle has-text-centered'>Total Koleksi <strong>{collections.countCollection}</strong> Judul</h3>
-            <ResponsivePie
-              data={dataTotalKoleksi}
-              margin={{ top: 40, right: 80, bottom: 150, left: 80 }}
-              innerRadius={0.5}
-              padAngle={0.7}
-              cornerRadius={3}
-              activeOuterRadiusOffset={8}
-              borderWidth={1}
-              colors={{ scheme: 'paired' }}
-              borderColor={{
-                  from: 'color',
-                  modifiers: [
-                      [
-                          'darker',
-                          0.2
-                      ]
-                  ]
-              }}
-              arcLinkLabel="label"
-              arcLinkLabelsSkipAngle={10}
-              arcLinkLabelsTextColor="#333333"
-              arcLinkLabelsStraightLength = {11}
-              arcLinkLabelsThickness={3}
-              arcLinkLabelsColor={{ from: 'color' }}
-              arcLabelsSkipAngle={10}
-              arcLabelsTextColor={{
-                  from: 'color',
-                  modifiers: [
-                      [
-                          'darker',
-                          3
-                      ]
-                  ]
-              }}
-              legends={[
-                {
-                    anchor: 'bottom',
-                    direction: 'column',
-                    justify: false,
-                    translateX: 0,
-                    translateY: 56,
-                    itemsSpacing: 3,
-                    itemWidth: 100,
-                    itemHeight: 18,
-                    itemTextColor: '#999',
-                    itemDirection: 'left-to-right',
-                    itemOpacity: 1,
-                    symbolSize: 18,
-                    symbolShape: 'circle',
-                    effects: [
-                        {
-                            on: 'hover',
-                            style: {
-                                itemTextColor: '#000'
-                            }
-                        }
+            <Link to={'/collections/data-digital'}>
+              <ResponsivePie
+                data={dataTotalKoleksi}
+                margin={{ top: 40, right: 80, bottom: 150, left: 80 }}
+                innerRadius={0.5}
+                padAngle={0.7}
+                cornerRadius={3}
+                activeOuterRadiusOffset={8}
+                borderWidth={1}
+                colors={{ scheme: 'paired' }}
+                borderColor={{
+                    from: 'color',
+                    modifiers: [
+                        [
+                            'darker',
+                            0.2
+                        ]
                     ]
-                }
-              ]}
-            />
+                }}
+                arcLinkLabel="label"
+                arcLinkLabelsSkipAngle={10}
+                arcLinkLabelsTextColor="#333333"
+                arcLinkLabelsStraightLength = {11}
+                arcLinkLabelsThickness={3}
+                arcLinkLabelsColor={{ from: 'color' }}
+                arcLabelsSkipAngle={10}
+                arcLabelsTextColor={{
+                    from: 'color',
+                    modifiers: [
+                        [
+                            'darker',
+                            3
+                        ]
+                    ]
+                }}
+                legends={[
+                  {
+                      anchor: 'bottom',
+                      direction: 'column',
+                      justify: false,
+                      translateX: 0,
+                      translateY: 56,
+                      itemsSpacing: 3,
+                      itemWidth: 100,
+                      itemHeight: 18,
+                      itemTextColor: '#999',
+                      itemDirection: 'left-to-right',
+                      itemOpacity: 1,
+                      symbolSize: 18,
+                      symbolShape: 'circle',
+                      effects: [
+                          {
+                              on: 'hover',
+                              style: {
+                                  itemTextColor: '#000'
+                              }
+                          }
+                      ]
+                  }
+                ]}
+              />
+            </Link>
           </div>
           <div className='column is-half' style={{ height: '100%' }}>
             <h3 className='subtitle has-text-centered'>Kategori Koleksi</h3>
-            <ResponsivePie
-              data={dataKategori}
-              margin={{ top: 40, right: 80, bottom: 150, left: 80 }}
-              innerRadius={0.5}
-              padAngle={0.7}
-              cornerRadius={3}
-              activeOuterRadiusOffset={8}
-              borderWidth={1}
-              colors={{ scheme: 'paired' }}
-              borderColor={{
-                  from: 'color',
-                  modifiers: [
-                      [
-                          'darker',
-                          0.2
-                      ]
-                  ]
-              }}
-              arcLinkLabel="label"
-              arcLinkLabelsSkipAngle={10}
-              arcLinkLabelsTextColor="#333333"
-              arcLinkLabelsStraightLength = {11}
-              arcLinkLabelsThickness={3}
-              arcLinkLabelsColor={{ from: 'color' }}
-              arcLabelsSkipAngle={10}
-              arcLabelsTextColor={{
-                  from: 'color',
-                  modifiers: [
-                      [
-                          'darker',
-                          3
-                      ]
-                  ]
-              }}
-              legends={[
-                {
-                    anchor: 'bottom',
-                    direction: 'column',
-                    justify: false,
-                    translateX: 0,
-                    translateY: 56,
-                    itemsSpacing: 3,
-                    itemWidth: 100,
-                    itemHeight: 18,
-                    itemTextColor: '#999',
-                    itemDirection: 'left-to-right',
-                    itemOpacity: 1,
-                    symbolSize: 18,
-                    symbolShape: 'circle',
-                    effects: [
-                        {
-                            on: 'hover',
-                            style: {
-                                itemTextColor: '#000'
-                            }
-                        }
+            <Link to={'/collections/category'}>
+              <ResponsivePie
+                data={dataKategori}
+                margin={{ top: 40, right: 80, bottom: 150, left: 80 }}
+                innerRadius={0.5}
+                padAngle={0.7}
+                cornerRadius={3}
+                activeOuterRadiusOffset={8}
+                borderWidth={1}
+                colors={{ scheme: 'paired' }}
+                borderColor={{
+                    from: 'color',
+                    modifiers: [
+                        [
+                            'darker',
+                            0.2
+                        ]
                     ]
-                }
-              ]}
-            />
+                }}
+                arcLinkLabel="label"
+                arcLinkLabelsSkipAngle={10}
+                arcLinkLabelsTextColor="#333333"
+                arcLinkLabelsStraightLength = {11}
+                arcLinkLabelsThickness={3}
+                arcLinkLabelsColor={{ from: 'color' }}
+                arcLabelsSkipAngle={10}
+                arcLabelsTextColor={{
+                    from: 'color',
+                    modifiers: [
+                        [
+                            'darker',
+                            3
+                        ]
+                    ]
+                }}
+                legends={[
+                  {
+                      anchor: 'bottom',
+                      direction: 'column',
+                      justify: false,
+                      translateX: 0,
+                      translateY: 56,
+                      itemsSpacing: 3,
+                      itemWidth: 100,
+                      itemHeight: 18,
+                      itemTextColor: '#999',
+                      itemDirection: 'left-to-right',
+                      itemOpacity: 1,
+                      symbolSize: 18,
+                      symbolShape: 'circle',
+                      effects: [
+                          {
+                              on: 'hover',
+                              style: {
+                                  itemTextColor: '#000'
+                              }
+                          }
+                      ]
+                  }
+                ]}
+              />
+            </Link>
           </div>
         </div>
         <div className='columns' style={{ height: '350px' }}>
           <div className='column is-half' style={{height: "100%"}}>
             <h3 className='subtitle has-text-centered'>Jenis Cerita</h3>
-            <ResponsiveBar
-              data={dataJenisCerita}
-              keys={[
-                  'Total Koleksi'
-              ]}
-              indexBy="story_type"
-              margin={{ top: 0, right: 0, bottom: 100, left: 60 }}
-              padding={0.3}
-              valueScale={{ type: 'linear' }}
-              indexScale={{ type: 'band', round: true }}
-              colors={{ scheme: 'paired' }}
-              borderColor={{
-                  from: 'color',
-                  modifiers: [
-                      [
-                          'darker',
-                          1.6
-                      ]
-                  ]
-              }}
-              axisTop={null}
-              axisRight={null}
-              axisBottom={{
-                  tickSize: 5,
-                  tickPadding: 1,
-                  tickRotation: 0,
-                  legend: 'Jenis Cerita',
-                  legendPosition: 'middle',
-                  legendOffset: 32
-              }}
-              axisLeft={{
-                  tickSize: 5,
-                  tickPadding: 1,
-                  tickRotation: 0,
-                  legend: 'Total Koleksi',
-                  legendPosition: 'middle',
-                  legendOffset: -40
-              }}
-              labelSkipWidth={12}
-              labelSkipHeight={12}
-              labelTextColor={{
-                  from: 'color',
-                  modifiers: [
-                      [
-                          'darker',
-                          1.6
-                      ]
-                  ]
-              }}
-              role="application"
-              ariaLabel="Bar"
-              barAriaLabel={e=>e.id+": "+e.formattedValue+" in story_type: "+e.indexValue}
-            />
+            <Link to={'/collections/story-type'}>
+              <ResponsiveBar
+                data={dataJenisCerita}
+                keys={[
+                    'Total Koleksi'
+                ]}
+                indexBy="story_type"
+                margin={{ top: 0, right: 0, bottom: 100, left: 60 }}
+                padding={0.3}
+                valueScale={{ type: 'linear' }}
+                indexScale={{ type: 'band', round: true }}
+                colors={{ scheme: 'paired' }}
+                borderColor={{
+                    from: 'color',
+                    modifiers: [
+                        [
+                            'darker',
+                            1.6
+                        ]
+                    ]
+                }}
+                axisTop={null}
+                axisRight={null}
+                axisBottom={{
+                    tickSize: 5,
+                    tickPadding: 1,
+                    tickRotation: 0,
+                    legend: 'Jenis Cerita',
+                    legendPosition: 'middle',
+                    legendOffset: 32
+                }}
+                axisLeft={{
+                    tickSize: 5,
+                    tickPadding: 1,
+                    tickRotation: 0,
+                    legend: 'Total Koleksi',
+                    legendPosition: 'middle',
+                    legendOffset: -40
+                }}
+                labelSkipWidth={12}
+                labelSkipHeight={12}
+                labelTextColor={{
+                    from: 'color',
+                    modifiers: [
+                        [
+                            'darker',
+                            1.6
+                        ]
+                    ]
+                }}
+                role="application"
+                ariaLabel="Bar"
+                barAriaLabel={e=>e.id+": "+e.formattedValue+" in story_type: "+e.indexValue}
+              />
+            </Link>
           </div>
           <div className='column is-half' style={{height: "100%"}}>
             <h3 className='subtitle has-text-centered'>Bahasa</h3>
-            <ResponsiveBar
-              data={dataBahasa}
-              keys={[
-                  'Total Koleksi'
-              ]}
-              indexBy="language"
-              margin={{ top: 0, right: 0, bottom: 100, left: 60 }}
-              padding={0.3}
-              valueScale={{ type: 'linear' }}
-              indexScale={{ type: 'band', round: true }}
-              colors={{ scheme: 'category10' }}
-              borderColor={{
-                  from: 'color',
-                  modifiers: [
-                      [
-                          'darker',
-                          1.6
-                      ]
-                  ]
-              }}
-              axisTop={null}
-              axisRight={null}
-              axisBottom={{
-                  tickSize: 5,
-                  tickPadding: 1,
-                  tickRotation: 0,
-                  legend: 'Bahasa',
-                  legendPosition: 'middle',
-                  legendOffset: 32
-              }}
-              axisLeft={{
-                  tickSize: 5,
-                  tickPadding: 1,
-                  tickRotation: 0,
-                  legend: 'Total Koleksi',
-                  legendPosition: 'middle',
-                  legendOffset: -40
-              }}
-              labelSkipWidth={12}
-              labelSkipHeight={12}
-              labelTextColor={{
-                  from: 'color',
-                  modifiers: [
-                      [
-                          'darker',
-                          1.6
-                      ]
-                  ]
-              }}
-              role="application"
-              ariaLabel="Bar"
-              barAriaLabel={e=>e.id+": "+e.formattedValue+" in language: "+e.indexValue}
-            />
+            <Link to={'/collections/language'}>
+              <ResponsiveBar
+                data={dataBahasa}
+                keys={[
+                    'Total Koleksi'
+                ]}
+                indexBy="language"
+                margin={{ top: 0, right: 0, bottom: 100, left: 60 }}
+                padding={0.3}
+                valueScale={{ type: 'linear' }}
+                indexScale={{ type: 'band', round: true }}
+                colors={{ scheme: 'category10' }}
+                borderColor={{
+                    from: 'color',
+                    modifiers: [
+                        [
+                            'darker',
+                            1.6
+                        ]
+                    ]
+                }}
+                axisTop={null}
+                axisRight={null}
+                axisBottom={{
+                    tickSize: 5,
+                    tickPadding: 1,
+                    tickRotation: 0,
+                    legend: 'Bahasa',
+                    legendPosition: 'middle',
+                    legendOffset: 32
+                }}
+                axisLeft={{
+                    tickSize: 5,
+                    tickPadding: 1,
+                    tickRotation: 0,
+                    legend: 'Total Koleksi',
+                    legendPosition: 'middle',
+                    legendOffset: -40
+                }}
+                labelSkipWidth={12}
+                labelSkipHeight={12}
+                labelTextColor={{
+                    from: 'color',
+                    modifiers: [
+                        [
+                            'darker',
+                            1.6
+                        ]
+                    ]
+                }}
+                role="application"
+                ariaLabel="Bar"
+                barAriaLabel={e=>e.id+": "+e.formattedValue+" in language: "+e.indexValue}
+              />
+            </Link>
           </div>
         </div>
         <div className='columns' style={{ height: '350px' }}>
           <div className='column is-fullWidth' style={{height: "100%"}}>
             <h3 className='subtitle has-text-centered'>Tahun Terbit Cetakan Pertama</h3>
-            <ResponsiveBar
-              data={dataTahunTerbit}
-              keys={[
-                  'Total Koleksi'
-              ]}
-              layout='horizontal'
-              indexBy="publish_1st_year"
-              margin={{ top: 0, right: 0, bottom: 100, left: 100 }}
-              padding={0.3}
-              valueScale={{ type: 'linear' }}
-              indexScale={{ type: 'band', round: true }}
-              colors={{ scheme: 'paired' }}
-              borderColor={{
-                  from: 'color',
-                  modifiers: [
-                      [
-                          'darker',
-                          1.6
-                      ]
-                  ]
-              }}
-              axisTop={null}
-              axisRight={null}
-              axisLeft={{
-                  tickSize: 5,
-                  tickPadding: 1,
-                  tickRotation: 0,
-                  legend: 'Tahun Terbit Cetakan Pertama',
-                  legendPosition: 'middle',
-                  legendOffset: -80
-              }}
-              axisBottom={{
-                  tickSize: 5,
-                  tickPadding: 1,
-                  tickRotation: 0,
-                  legend: 'Total Koleksi',
-                  legendPosition: 'middle',
-                  legendOffset: 32
-              }}
-              labelSkipWidth={12}
-              labelSkipHeight={12}
-              labelTextColor={{
-                  from: 'color',
-                  modifiers: [
-                      [
-                          'darker',
-                          1.6
-                      ]
-                  ]
-              }}
-              role="application"
-              ariaLabel="Bar"
-              barAriaLabel={e=>e.id+": "+e.formattedValue+" in publish_1st_year: "+e.indexValue}
-            />
+            <Link to={'/collections/publish-year'}>
+              <ResponsiveBar
+                data={dataTahunTerbit}
+                keys={[
+                    'Total Koleksi'
+                ]}
+                layout='horizontal'
+                indexBy="publish_1st_year"
+                margin={{ top: 0, right: 0, bottom: 100, left: 100 }}
+                padding={0.3}
+                valueScale={{ type: 'linear' }}
+                indexScale={{ type: 'band', round: true }}
+                colors={{ scheme: 'paired' }}
+                borderColor={{
+                    from: 'color',
+                    modifiers: [
+                        [
+                            'darker',
+                            1.6
+                        ]
+                    ]
+                }}
+                axisTop={null}
+                axisRight={null}
+                axisLeft={{
+                    tickSize: 5,
+                    tickPadding: 1,
+                    tickRotation: 0,
+                    legend: 'Tahun Terbit Cetakan Pertama',
+                    legendPosition: 'middle',
+                    legendOffset: -80
+                }}
+                axisBottom={{
+                    tickSize: 5,
+                    tickPadding: 1,
+                    tickRotation: 0,
+                    legend: 'Total Koleksi',
+                    legendPosition: 'middle',
+                    legendOffset: 32
+                }}
+                labelSkipWidth={12}
+                labelSkipHeight={12}
+                labelTextColor={{
+                    from: 'color',
+                    modifiers: [
+                        [
+                            'darker',
+                            1.6
+                        ]
+                    ]
+                }}
+                role="application"
+                ariaLabel="Bar"
+                barAriaLabel={e=>e.id+": "+e.formattedValue+" in publish_1st_year: "+e.indexValue}
+              />
+            </Link>
           </div>
         </div>
     </div>

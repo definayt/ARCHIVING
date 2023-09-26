@@ -14,7 +14,7 @@ import ExportCollectionModal from "./ExportCollectionModal";
 import RRMultiSelect from 'rr-multi-select';
 import { useSelector } from 'react-redux';
 
-const CollectionList = (props) => {
+const CollectionsPublish1stYearList = (props) => {
   
   const {user} = useSelector((state => state.auth));
   var buttonAdd = "block";
@@ -319,22 +319,6 @@ const CollectionList = (props) => {
         accessor: "publish_last_year",
       },
       {
-        Header: "Kategori",
-        accessor: "category.category",
-      },
-      {
-        Header: "Jenis Cerita",
-        accessor: "story_type.story_type",
-      },
-      {
-        Header: "Bahasa",
-        accessor: "language.language",
-      },
-      {
-        Header: "Data Digital",
-        accessor: "digital_data",
-      },
-      {
         Header: "Aksi",
         accessor: "actions",
         Cell: (props) => {
@@ -478,7 +462,7 @@ const CollectionList = (props) => {
   return (
     <div className="list rowcolumns">
       <h1 className='title has-text-centered mt-3'>Koleksi</h1>
-      <h2 className='subtitle has-text-centered'>Daftar Koleksi</h2>  
+      <h2 className='subtitle has-text-centered'>Daftar Koleksi Berdasarkan Tahun Terbit</h2>  
       <br /><br />    
       <div className="columns">
         <div className="column is-one-quarter">
@@ -493,90 +477,16 @@ const CollectionList = (props) => {
               />
             </div>
           </div>
-          <div className="field">
-            <div className="control">
-              <Select
-                  className="basic-single"
-                  classNamePrefix="select"
-                  defaultValue={categoryOptions[0]}
-                  isClearable="true"
-                  isSearchable="true"
-                  value={category} 
-                  onChange={(e) => setCategory(e)}
-                  options={categoryOptions}
-                  placeholder="Filter Kategori.."
-              ></Select>
-            </div>
-          </div>
-          {/* <div className="field">
-            <div className="control">
-              <Select
-                  className="basic-single"
-                  classNamePrefix="select"
-                  defaultValue={storyTypeOptions[0]}
-                  isClearable="true"
-                  isSearchable="true"
-                  value={story_type} 
-                  onChange={(e) => setStoryType(e)}
-                  options={storyTypeOptions}
-                  placeholder="Filter Jenis Cerita.."
-              ></Select>
-            </div>
-          </div> */}
-        </div>
-        <div className="column is-one-quarter">
-          <div className="field">
-            <div className="control">
-              <Select
-                  className="basic-single"
-                  classNamePrefix="select"
-                  defaultValue={storyTypeOptions[0]}
-                  isClearable="true"
-                  isSearchable="true"
-                  value={story_type} 
-                  onChange={(e) => setStoryType(e)}
-                  options={storyTypeOptions}
-                  placeholder="Filter Jenis Cerita.."
-              ></Select>
-            </div>
-          </div>
-          <div className="field">
-            <div className="control">
-              <Select
-                  className="basic-single"
-                  classNamePrefix="select"
-                  defaultValue={languageOptions[0]}
-                  isClearable="true"
-                  isSearchable="true"
-                  value={language} 
-                  onChange={(e) => setLanguage(e)}
-                  options={languageOptions}
-                  placeholder="Filter Bahasa.."
-              ></Select>
-            </div>
-          </div>
-          {/* <div className="field">
-            <div className="control">
-                <RRMultiSelect
-                    classNamePrefix="select"
-                    options={digitalFormatOptions}
-                    isObject={["value","label"]}
-                    value={digital_format}
-                    onChange={setDigitalFormat}
-                    inputPlaceholder="Filter Format Digital.."
-                />
-            </div>
-          </div> */}
           <div className="buttons is-right">
             <button className="button is-link is-outlined" type="button" onClick={findByTitle}>Cari</button>
             <button className="button is-success is-outlined" onClick={toggleModalExport}>Cetak</button>
           </div>
-          </div>
-          <div className="column">
-            <div className="buttons is-right">
-                <Link to={"/collections/add"} className='button is-primary mb-2' style={{display: buttonAdd}}>Tambah</Link>
-            </div>
-          </div>
+        </div>
+        <div className="column">
+        <div className="buttons is-right">
+            <Link to={"/collections/add"} className='button is-primary mb-2' style={{display: buttonAdd}}>Tambah</Link>
+        </div>
+        </div>
       </div>
 
       <div className="is-fullWidth">
@@ -664,4 +574,4 @@ const CollectionList = (props) => {
   );
 };
 
-export default CollectionList;
+export default CollectionsPublish1stYearList;
