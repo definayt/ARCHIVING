@@ -22,6 +22,7 @@ const FormEditCollection= () => {
     const [languageOptions, setLanguageOptions] = useState([]);
     const [digital_data, setDigitalData] = useState([]);
     const [digitalDataOptions, setDigitalDataOptions] = useState([]);
+    const [synopsis, setSynopsis] = useState("");
     const [msg, setMsg] = useState("");
     const [showMessageError, setShowMessageError] = useState(false);
     const navigate = useNavigate();
@@ -93,6 +94,9 @@ const FormEditCollection= () => {
                     });
                 });
                 setDigitalData(array_data);
+                if(response.data.synopsis){
+                    setSynopsis(response.data.synopsis);
+                }
             } catch (error) {
                 if(error.response){
                     setMsg(error.response.data.msg);
@@ -140,7 +144,8 @@ const FormEditCollection= () => {
                 categoryId: category.value,
                 storyTypeId: story_type.value,
                 languageId: language.value,
-                digitalDataId: digitalDataId
+                digitalDataId: digitalDataId,
+                synopsis: synopsis
             });
             toggleModal();
         } catch (error) {
@@ -434,6 +439,18 @@ const FormEditCollection= () => {
                                     onChange={setDigitalData}
                                     inputPlaceholder="Ketik untuk mencari data.."
                                 />
+                            </div>
+                        </div>
+                        <div className="field">
+                            <label className="label">Sinopsis</label>
+                            <div className="control">
+                                <textarea 
+                                    className="textarea" 
+                                    placeholder="Sinopsis"
+                                    rows={10}
+                                    value={synopsis}
+                                    onChange={(e) => setSynopsis(e.target.value)}>
+                                </textarea>
                             </div>
                         </div>
                         <div className="field">

@@ -16,6 +16,7 @@ const ViewCollection= () => {
     const [story_type, setStoryType] = useState("");
     const [language, setLanguage] = useState("");
     const [digital_data, setDigitalData] = useState([]);
+    const [synopsis, setSynopsis] = useState("");
     const [user, setUser] = useState([]);
     const [msg, setMsg] = useState("");    
     const {id} = useParams();
@@ -60,6 +61,9 @@ const ViewCollection= () => {
                 }
                 if(response.data.digital_collections.length){
                     setDigitalData(response.data.digital_collections);
+                }
+                if(response.data.synopsis){
+                    setSynopsis(response.data.synopsis);
                 }
                 if(response.data.user){
                     setUser(response.data.user.name);
@@ -271,7 +275,16 @@ const ViewCollection= () => {
                                     </div>
                                 </div>
                         </div>
-                            
+                        <div className="field">
+                            <label className="label">Sinopsis</label>
+                                <div className="card">
+                                    <div className="card-content">
+                                        <div className="content">
+                                        <p style={{whiteSpace: "pre-wrap"}}>{synopsis}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>     
                        
                         <div className="field">
                             <div className="control">

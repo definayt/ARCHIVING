@@ -22,6 +22,7 @@ const FormAddCollection = () => {
     const [languageOptions, setLanguageOptions] = useState([]);
     const [digital_data, setDigitalData] = useState([]);
     const [digitalDataOptions, setDigitalDataOptions] = useState([]);
+    const [synopsis, setSynopsis] = useState("");
     const [msg, setMsg] = useState("");
     const [showMessageError, setShowMessageError] = useState(false);
     const navigate = useNavigate();
@@ -71,7 +72,8 @@ const FormAddCollection = () => {
                 categoryId: category.value,
                 storyTypeId: story_type.value,
                 languageId: language.value,
-                digitalDataId: digitalDataId
+                digitalDataId: digitalDataId,
+                synopsis: synopsis
             });
             toggleModal();
         } catch (error) {
@@ -350,6 +352,18 @@ const FormAddCollection = () => {
                                     onChange={setDigitalData}
                                     inputPlaceholder="Ketik untuk mencari data.."
                                 />
+                            </div>
+                        </div>
+                        <div className="field">
+                            <label className="label">Sinopsis</label>
+                            <div className="control">
+                                <textarea 
+                                    className="textarea" 
+                                    placeholder="Sinopsis"
+                                    rows={10}
+                                    value={synopsis}
+                                    onChange={(e) => setSynopsis(e.target.value)}>
+                                </textarea>
                             </div>
                         </div>
                         <div className="field">

@@ -160,7 +160,7 @@ export const createCollection = async(req, res) => {
     const promises = [];
     let collectionId;
     isISBNUnique(isbn, "").then(async isUnique => {
-        if (isUnique) {
+        if (isUnique || isbn === "") {
             try{
                 await Collections.create({
                     no_bp: no_bp,
