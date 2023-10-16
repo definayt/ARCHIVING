@@ -11,6 +11,7 @@ const FormAddCollection = () => {
     const [isbn, setISBN] = useState("");
     const [title, setTitle] = useState("");
     const [writer, setWriter] = useState("");
+    const [yearOptions, setYearOptions] = useState([]);
     const [publish_1st_year, setPublish1stYear] = useState("");
     const [publish_last_year, setPublishLastYear] = useState("");
     const [amount_printed, setAmountPrinted] = useState("");
@@ -52,8 +53,8 @@ const FormAddCollection = () => {
                 digitalDataId.push(element.value);
             });
             let no_bp_remove = no_bp.replace(/_/g," ");
-            let publish_1st_year_remove = publish_1st_year.replace(/[^\d]/g,"0");
-            let publish_last_year_remove = publish_last_year.replace(/[^\d]/g,"0");
+            // let publish_1st_year_remove = publish_1st_year.replace(/[^\d]/g,"0");
+            // let publish_last_year_remove = publish_last_year.replace(/[^\d]/g,"0");
             let isbn_remove = isbn;
             if(isbn.charAt(13) === "_"){
                 isbn_remove = replaceCharacter(isbn_remove, 16, " ");
@@ -66,8 +67,8 @@ const FormAddCollection = () => {
                 isbn: isbn_remove,
                 title: title,
                 writer: writer,
-                publish_1st_year: publish_1st_year_remove,
-                publish_last_year: publish_last_year_remove,
+                publish_1st_year: publish_1st_year.value,
+                publish_last_year: publish_last_year.value,
                 amount_printed: amount_printed,
                 categoryId: category.value,
                 storyTypeId: story_type.value,
@@ -89,6 +90,7 @@ const FormAddCollection = () => {
         getStoryTypes();
         getLanguages();
         getDigitalData();
+        getYear();
     }, []);
 
     const getCategories = async () => {
@@ -183,6 +185,19 @@ const FormAddCollection = () => {
                 }
             });
     };
+    const getYear = async () => {
+        const date = new Date();
+        let yearNow = date.getFullYear();
+        let arr = [];
+        for (let i = yearNow; i >= 1600; i--) {
+            arr.push({
+                value : i,
+                label : i
+            });
+            setYearOptions(arr);
+        }
+    }
+
     
   return (
     <div>
@@ -193,11 +208,6 @@ const FormAddCollection = () => {
             <div className="card-content">
                 <div className="content">
                     <form onSubmit={saveCollection}>
-                        <article className="message is-danger" style={{display: showMessageError ? 'block' : 'none' }}>
-                            <div className="message-body">
-                            {msg}
-                            </div>
-                        </article>
                         <div className="field">
                             <label className="label">Nomor BP</label>
                             <div className="control">
@@ -249,7 +259,7 @@ const FormAddCollection = () => {
                         <div className="field">
                             <label className="label">Tahun Terbit Cetakan Pertama</label>
                             <div className="control">
-                                <InputMask 
+                                {/* <InputMask 
                                     className="input"
                                     mask="9999" 
                                     maskplaceholder="xxxx"
@@ -257,13 +267,24 @@ const FormAddCollection = () => {
                                     onChange={(e) => setPublish1stYear(e.target.value)} 
                                     placeholder='Tahun Terbit Cetakan Pertama'
                                     minLength={4}
-                                />
+                                /> */}
+                                <Select
+                                    className="basic-single"
+                                    classNamePrefix="select"
+                                    defaultValue={yearOptions[0]}
+                                    isClearable="true"
+                                    isSearchable="true"
+                                    value={publish_1st_year} 
+                                    onChange={(e) => setPublish1stYear(e)}
+                                    options={yearOptions}
+                                >
+                                </Select>
                             </div>
                         </div>
                         <div className="field">
                             <label className="label">Tahun Cetakan Terakhir</label>
                             <div className="control">
-                                <InputMask 
+                                {/* <InputMask 
                                     className="input"
                                     mask="9999" 
                                     maskplaceholder="xxxx"
@@ -271,7 +292,18 @@ const FormAddCollection = () => {
                                     onChange={(e) => setPublishLastYear(e.target.value)} 
                                     placeholder='Tahun Cetakan Terakhir'
                                     minLength={4}
-                                />
+                                /> */}
+                                <Select
+                                    className="basic-single"
+                                    classNamePrefix="select"
+                                    defaultValue={yearOptions[0]}
+                                    isClearable="true"
+                                    isSearchable="true"
+                                    value={publish_last_year} 
+                                    onChange={(e) => setPublishLastYear(e)}
+                                    options={yearOptions}
+                                >
+                                </Select>
                                 
                             </div>
                         </div>
@@ -366,6 +398,11 @@ const FormAddCollection = () => {
                                 </textarea>
                             </div>
                         </div>
+                        <article className="message is-danger" style={{display: showMessageError ? 'block' : 'none' }}>
+                            <div className="message-body">
+                            {msg}
+                            </div>
+                        </article>
                         <div className="field">
                             <div className="control">
                                 <div className='buttons is-centered'>

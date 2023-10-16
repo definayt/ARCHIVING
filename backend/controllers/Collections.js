@@ -36,7 +36,10 @@ export const getCollections = async(req, res) => {
                              }
                         ]
                      },
-                ]
+                ],
+                order: [
+                    ['title', 'ASC'],
+                ],
             });
             res.status(200).json(response);
         }else{
@@ -62,7 +65,10 @@ export const getCollections = async(req, res) => {
                              }
                         ]
                      },
-                ]
+                ],
+                order: [
+                    ['title', 'ASC'],
+                ],
             });
             res.status(200).json(response);
         }
@@ -160,7 +166,7 @@ export const createCollection = async(req, res) => {
     const promises = [];
     let collectionId;
     isISBNUnique(isbn, "").then(async isUnique => {
-        if (isUnique || isbn === "") {
+        if (isUnique || isbn === "" || isbn === "-") {
             try{
                 await Collections.create({
                     no_bp: no_bp,
@@ -215,7 +221,7 @@ export const updateCollection = async(req, res) => {
     const promises = [];
     let collectionId;
     isISBNUnique(isbn, req.params.id).then(async isUnique => {
-        if (isUnique) {
+        if (isUnique || isbn === "" || isbn === "-") {
             try{
                 await Collections.update({
                     no_bp: no_bp,
@@ -329,128 +335,327 @@ const getPagingData = (data, page, limit) => {
 };
 
 export const findAllCollection = (req, res) => {
-    const { page, size, input, category, story_type, language, digital_format } = req.query;
+    const { page, size, input, inputSynopsis, category, story_type, language, digital_format } = req.query;
     if(category && story_type && language){
-        var condition = input ? { 
-            [Op.and] : {
-                [Op.or] : {
-                    title: { [Op.like]: `%${input}%` }, 
-                    writer: { [Op.like]: `%${input}%` }, 
-                    isbn: { [Op.like]: `%${input}%` },
-                    no_bp: { [Op.like]: `%${input}%` },
-                    publish_1st_year: { [Op.like]: `%${input}%` },
-                    publish_last_year: { [Op.like]: `%${input}%` },
-                },
-                categoryId : category,
-                storyTypeId : story_type,
-                languageId : language
-            }
-        } : {
-            [Op.and] : {
-                categoryId : category,
-                storyTypeId : story_type,
-                languageId : language
-            }
-        };
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    synopsis : { [Op.like]: `%${inputSynopsis}%`} ,
+                    categoryId : category,
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    synopsis : { [Op.like]: `%${inputSynopsis}%`} ,
+                    categoryId : category,
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            };
+        }else{
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    categoryId : category,
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    categoryId : category,
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            };
+        }
     }else if(!category && story_type && language){
-        var condition = input ? { 
-            [Op.and] : {
-                [Op.or] : {
-                    title: { [Op.like]: `%${input}%` }, 
-                    writer: { [Op.like]: `%${input}%` }, 
-                    isbn: { [Op.like]: `%${input}%` },
-                    no_bp: { [Op.like]: `%${input}%` },
-                    publish_1st_year: { [Op.like]: `%${input}%` },
-                    publish_last_year: { [Op.like]: `%${input}%` },
-                },
-                storyTypeId : story_type,
-                languageId : language
-            }
-        } : {
-            [Op.and] : {
-                storyTypeId : story_type,
-                languageId : language
-            }
-        };
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            };
+        }
+        else{
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            };
+        }
     }else if(category && !story_type && language){
-        var condition = input ? { 
-            [Op.and] : {
-                [Op.or] : {
-                    title: { [Op.like]: `%${input}%` }, 
-                    writer: { [Op.like]: `%${input}%` }, 
-                    isbn: { [Op.like]: `%${input}%` },
-                    no_bp: { [Op.like]: `%${input}%` },
-                    publish_1st_year: { [Op.like]: `%${input}%` },
-                    publish_last_year: { [Op.like]: `%${input}%` },
-                },
-                categoryId : category,
-                languageId : language
-            }
-        } : {
-            [Op.and] : {
-                categoryId : category,
-                languageId : language
-            }
-        };
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    categoryId : category,
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    categoryId : category,
+                    languageId : language
+                }
+            };
+        }else{
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    categoryId : category,
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    categoryId : category,
+                    languageId : language
+                }
+            };
+        }
     }else if(category && story_type && !language){
-        var condition = input ? { 
-            [Op.and] : {
-                [Op.or] : {
-                    title: { [Op.like]: `%${input}%` }, 
-                    writer: { [Op.like]: `%${input}%` }, 
-                    isbn: { [Op.like]: `%${input}%` },
-                    no_bp: { [Op.like]: `%${input}%` },
-                    publish_1st_year: { [Op.like]: `%${input}%` },
-                    publish_last_year: { [Op.like]: `%${input}%` },
-                },
-                categoryId : category,
-                storyTypeId : story_type,
-            }
-        } : {
-            [Op.and] : {
-                categoryId : category,
-                storyTypeId : story_type,
-            }
-        };
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    categoryId : category,
+                    storyTypeId : story_type,
+                }
+            } : {
+                [Op.and] : {
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    categoryId : category,
+                    storyTypeId : story_type,
+                }
+            };
+        }else{
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    categoryId : category,
+                    storyTypeId : story_type,
+                }
+            } : {
+                [Op.and] : {
+                    categoryId : category,
+                    storyTypeId : story_type,
+                }
+            };
+        }
     }else if(!category && !story_type && language){
-        var condition = input ? { 
-            [Op.and] : {
-                [Op.or] : {
-                    title: { [Op.like]: `%${input}%` }, 
-                    writer: { [Op.like]: `%${input}%` }, 
-                    isbn: { [Op.like]: `%${input}%` },
-                    no_bp: { [Op.like]: `%${input}%` },
-                    publish_1st_year: { [Op.like]: `%${input}%` },
-                    publish_last_year: { [Op.like]: `%${input}%` },
-                },
-                languageId : language
-            }
-        } : {
-            [Op.and] : {
-                languageId : language
-            }
-        };
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    languageId : language
+                }
+            };
+        }else{
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    languageId : language
+                }
+            };
+        }
     }else if(!category && story_type && !language){
-        var condition = input ? { 
-            [Op.and] : {
-                [Op.or] : {
-                    title: { [Op.like]: `%${input}%` }, 
-                    writer: { [Op.like]: `%${input}%` }, 
-                    isbn: { [Op.like]: `%${input}%` },
-                    no_bp: { [Op.like]: `%${input}%` },
-                    publish_1st_year: { [Op.like]: `%${input}%` },
-                    publish_last_year: { [Op.like]: `%${input}%` },
-                },
-                storyTypeId : story_type,
-            }
-        } : {
-            [Op.and] : {
-                storyTypeId : story_type,
-            }
-        };
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    storyTypeId : story_type,
+                }
+            } : {
+                [Op.and] : {
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    storyTypeId : story_type,
+                }
+            };
+        }else{
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    storyTypeId : story_type,
+                }
+            } : {
+                [Op.and] : {
+                    storyTypeId : story_type,
+                }
+            };
+        }
     }else if(category && !story_type && !language){
-        var condition = input ? { 
-            [Op.and] : {
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    categoryId : category,
+                }
+            } : {
+                [Op.and] : {
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    categoryId : category,
+                }
+            };
+        }else{
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    categoryId : category,
+                }
+            } : {
+                [Op.and] : {
+                    categoryId : category,
+                }
+            };
+        }
+    }else{
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    }
+                }
+            } : {
+                synopsis : { [Op.like] : `%${inputSynopsis}%` }
+            };
+        }else{
+            var condition = input ? { 
                 [Op.or] : {
                     title: { [Op.like]: `%${input}%` }, 
                     writer: { [Op.like]: `%${input}%` }, 
@@ -458,25 +663,9 @@ export const findAllCollection = (req, res) => {
                     no_bp: { [Op.like]: `%${input}%` },
                     publish_1st_year: { [Op.like]: `%${input}%` },
                     publish_last_year: { [Op.like]: `%${input}%` },
-                },
-                categoryId : category,
-            }
-        } : {
-            [Op.and] : {
-                categoryId : category,
-            }
-        };
-    }else{
-        var condition = input ? { 
-            [Op.or] : {
-                title: { [Op.like]: `%${input}%` }, 
-                writer: { [Op.like]: `%${input}%` }, 
-                isbn: { [Op.like]: `%${input}%` },
-                no_bp: { [Op.like]: `%${input}%` },
-                publish_1st_year: { [Op.like]: `%${input}%` },
-                publish_last_year: { [Op.like]: `%${input}%` },
-            }
-        } : null;
+                }
+            } : null;
+        }
     }
     
     // var conditionDigitalFormat = digital_format ? { 
@@ -510,6 +699,9 @@ export const findAllCollection = (req, res) => {
                         }
                 ]
                 },
+        ],
+        order: [
+            ['title', 'ASC'],
         ],
         distinct: true,
     })
@@ -621,128 +813,327 @@ export const countPublished1stYear = async (req, res) => {
 }
 
 export const exportExcelCollections = async(req, res) => {
-    const { page, size, input, category, story_type, language, digital_format } = req.query;
+    const { page, size, input, inputSynopsis, category, story_type, language, digital_format } = req.query;
     if(category && story_type && language){
-        var condition = input ? { 
-            [Op.and] : {
-                [Op.or] : {
-                    title: { [Op.like]: `%${input}%` }, 
-                    writer: { [Op.like]: `%${input}%` }, 
-                    isbn: { [Op.like]: `%${input}%` },
-                    no_bp: { [Op.like]: `%${input}%` },
-                    publish_1st_year: { [Op.like]: `%${input}%` },
-                    publish_last_year: { [Op.like]: `%${input}%` },
-                },
-                categoryId : category,
-                storyTypeId : story_type,
-                languageId : language
-            }
-        } : {
-            [Op.and] : {
-                categoryId : category,
-                storyTypeId : story_type,
-                languageId : language
-            }
-        };
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    synopsis : { [Op.like]: `%${inputSynopsis}%`} ,
+                    categoryId : category,
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    synopsis : { [Op.like]: `%${inputSynopsis}%`} ,
+                    categoryId : category,
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            };
+        }else{
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    categoryId : category,
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    categoryId : category,
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            };
+        }
     }else if(!category && story_type && language){
-        var condition = input ? { 
-            [Op.and] : {
-                [Op.or] : {
-                    title: { [Op.like]: `%${input}%` }, 
-                    writer: { [Op.like]: `%${input}%` }, 
-                    isbn: { [Op.like]: `%${input}%` },
-                    no_bp: { [Op.like]: `%${input}%` },
-                    publish_1st_year: { [Op.like]: `%${input}%` },
-                    publish_last_year: { [Op.like]: `%${input}%` },
-                },
-                storyTypeId : story_type,
-                languageId : language
-            }
-        } : {
-            [Op.and] : {
-                storyTypeId : story_type,
-                languageId : language
-            }
-        };
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            };
+        }
+        else{
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    storyTypeId : story_type,
+                    languageId : language
+                }
+            };
+        }
     }else if(category && !story_type && language){
-        var condition = input ? { 
-            [Op.and] : {
-                [Op.or] : {
-                    title: { [Op.like]: `%${input}%` }, 
-                    writer: { [Op.like]: `%${input}%` }, 
-                    isbn: { [Op.like]: `%${input}%` },
-                    no_bp: { [Op.like]: `%${input}%` },
-                    publish_1st_year: { [Op.like]: `%${input}%` },
-                    publish_last_year: { [Op.like]: `%${input}%` },
-                },
-                categoryId : category,
-                languageId : language
-            }
-        } : {
-            [Op.and] : {
-                categoryId : category,
-                languageId : language
-            }
-        };
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    categoryId : category,
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    categoryId : category,
+                    languageId : language
+                }
+            };
+        }else{
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    categoryId : category,
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    categoryId : category,
+                    languageId : language
+                }
+            };
+        }
     }else if(category && story_type && !language){
-        var condition = input ? { 
-            [Op.and] : {
-                [Op.or] : {
-                    title: { [Op.like]: `%${input}%` }, 
-                    writer: { [Op.like]: `%${input}%` }, 
-                    isbn: { [Op.like]: `%${input}%` },
-                    no_bp: { [Op.like]: `%${input}%` },
-                    publish_1st_year: { [Op.like]: `%${input}%` },
-                    publish_last_year: { [Op.like]: `%${input}%` },
-                },
-                categoryId : category,
-                storyTypeId : story_type,
-            }
-        } : {
-            [Op.and] : {
-                categoryId : category,
-                storyTypeId : story_type,
-            }
-        };
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    categoryId : category,
+                    storyTypeId : story_type,
+                }
+            } : {
+                [Op.and] : {
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    categoryId : category,
+                    storyTypeId : story_type,
+                }
+            };
+        }else{
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    categoryId : category,
+                    storyTypeId : story_type,
+                }
+            } : {
+                [Op.and] : {
+                    categoryId : category,
+                    storyTypeId : story_type,
+                }
+            };
+        }
     }else if(!category && !story_type && language){
-        var condition = input ? { 
-            [Op.and] : {
-                [Op.or] : {
-                    title: { [Op.like]: `%${input}%` }, 
-                    writer: { [Op.like]: `%${input}%` }, 
-                    isbn: { [Op.like]: `%${input}%` },
-                    no_bp: { [Op.like]: `%${input}%` },
-                    publish_1st_year: { [Op.like]: `%${input}%` },
-                    publish_last_year: { [Op.like]: `%${input}%` },
-                },
-                languageId : language
-            }
-        } : {
-            [Op.and] : {
-                languageId : language
-            }
-        };
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    languageId : language
+                }
+            };
+        }else{
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    languageId : language
+                }
+            } : {
+                [Op.and] : {
+                    languageId : language
+                }
+            };
+        }
     }else if(!category && story_type && !language){
-        var condition = input ? { 
-            [Op.and] : {
-                [Op.or] : {
-                    title: { [Op.like]: `%${input}%` }, 
-                    writer: { [Op.like]: `%${input}%` }, 
-                    isbn: { [Op.like]: `%${input}%` },
-                    no_bp: { [Op.like]: `%${input}%` },
-                    publish_1st_year: { [Op.like]: `%${input}%` },
-                    publish_last_year: { [Op.like]: `%${input}%` },
-                },
-                storyTypeId : story_type,
-            }
-        } : {
-            [Op.and] : {
-                storyTypeId : story_type,
-            }
-        };
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    storyTypeId : story_type,
+                }
+            } : {
+                [Op.and] : {
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    storyTypeId : story_type,
+                }
+            };
+        }else{
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    storyTypeId : story_type,
+                }
+            } : {
+                [Op.and] : {
+                    storyTypeId : story_type,
+                }
+            };
+        }
     }else if(category && !story_type && !language){
-        var condition = input ? { 
-            [Op.and] : {
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    categoryId : category,
+                }
+            } : {
+                [Op.and] : {
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    categoryId : category,
+                }
+            };
+        }else{
+            var condition = input ? { 
+                [Op.and] : {
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    },
+                    categoryId : category,
+                }
+            } : {
+                [Op.and] : {
+                    categoryId : category,
+                }
+            };
+        }
+    }else{
+        if(inputSynopsis){
+            var condition = input ? { 
+                [Op.and] : {
+                    synopsis : { [Op.like] : `%${inputSynopsis}%` },
+                    [Op.or] : {
+                        title: { [Op.like]: `%${input}%` }, 
+                        writer: { [Op.like]: `%${input}%` }, 
+                        isbn: { [Op.like]: `%${input}%` },
+                        no_bp: { [Op.like]: `%${input}%` },
+                        publish_1st_year: { [Op.like]: `%${input}%` },
+                        publish_last_year: { [Op.like]: `%${input}%` },
+                    }
+                }
+            } : {
+                synopsis : { [Op.like] : `%${inputSynopsis}%` }
+            };
+        }else{
+            var condition = input ? { 
                 [Op.or] : {
                     title: { [Op.like]: `%${input}%` }, 
                     writer: { [Op.like]: `%${input}%` }, 
@@ -750,25 +1141,9 @@ export const exportExcelCollections = async(req, res) => {
                     no_bp: { [Op.like]: `%${input}%` },
                     publish_1st_year: { [Op.like]: `%${input}%` },
                     publish_last_year: { [Op.like]: `%${input}%` },
-                },
-                categoryId : category,
-            }
-        } : {
-            [Op.and] : {
-                categoryId : category,
-            }
-        };
-    }else{
-        var condition = input ? { 
-            [Op.or] : {
-                title: { [Op.like]: `%${input}%` }, 
-                writer: { [Op.like]: `%${input}%` }, 
-                isbn: { [Op.like]: `%${input}%` },
-                no_bp: { [Op.like]: `%${input}%` },
-                publish_1st_year: { [Op.like]: `%${input}%` },
-                publish_last_year: { [Op.like]: `%${input}%` },
-            }
-        } : null;
+                }
+            } : null;
+        }
     }
     // var conditionDigitalFormat = digital_format ? { 
     //     digitalFormatId : { [Op.in] : digital_format }
@@ -797,6 +1172,9 @@ export const exportExcelCollections = async(req, res) => {
                             }
                     ]
                     },
+            ],
+            order: [
+                ['title', 'ASC'],
             ],
              distinct: true,
         });

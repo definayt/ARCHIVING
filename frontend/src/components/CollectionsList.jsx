@@ -27,6 +27,7 @@ const CollectionList = (props) => {
   const navigate = useNavigate();
   const [collection, setCollection] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [searchInputSynopsis, setSearchInputSynopsis] = useState("");
   const collectionRef = useRef();
 
   const [page, setPage] = useState(1);
@@ -40,6 +41,11 @@ const CollectionList = (props) => {
   const onChangeSearchInput = (e) => {
     const searchInput = e.target.value;
     setSearchInput(searchInput);
+  };
+
+  const onChangeSearchInputSynopsis = (e) => {
+    const searchInputSynopsis = e.target.value;
+    setSearchInputSynopsis(searchInputSynopsis);
   };
 
   const [category, setCategory] = useState("");
@@ -149,7 +155,7 @@ const CollectionList = (props) => {
       getDigitalFormat();
   }, []);
 
-  const getRequestParams = (searchInput, category, story_type, language, digital_format, page, pageSize) => {
+  const getRequestParams = (searchInput, searchInputSynopsis, category, story_type, language, digital_format, page, pageSize) => {
     let params = {};
     if(category){
       params["category"] = category.value;
@@ -175,6 +181,10 @@ const CollectionList = (props) => {
       params["input"] = searchInput;
     }
 
+    if (searchInputSynopsis) {
+      params["inputSynopsis"] = searchInputSynopsis;
+    }
+
     if (page) {
       params["page"] = page - 1;
     }
@@ -187,7 +197,7 @@ const CollectionList = (props) => {
   };
 
   const retrieveCollection = () => {
-    const params = getRequestParams(searchInput, category, story_type, language, digital_format, page, pageSize);
+    const params = getRequestParams(searchInput, searchInputSynopsis, category, story_type, language, digital_format, page, pageSize);
 
     Service.getAllCollection(params)
       .then((response) => {
@@ -397,7 +407,7 @@ const CollectionList = (props) => {
 
   const exportToExcel = async () => {
     try {
-      const params = getRequestParams(searchInput, category, story_type, language, digital_format, page, pageSize);
+      const params = getRequestParams(searchInput, searchInputSynopsis, category, story_type, language, digital_format, page, pageSize);
         await axios.get('http://localhost:5000/collections-export', {params: params})
         .then((response) => {
             const dataCollection = [];
@@ -479,20 +489,39 @@ const CollectionList = (props) => {
     <div className="list rowcolumns">
       <h1 className='title has-text-centered mt-3'>Koleksi</h1>
       <h2 className='subtitle has-text-centered'>Daftar Koleksi</h2>  
-      <br /><br />    
+      <br /><br />
       <div className="columns">
-        <div className="column is-one-quarter">
+        <div className="column is-half">
           <div className="field">
             <div className="control">
               <input
                 type="text"
                 className="input"
-                placeholder="Cari Data"
+                placeholder="Cari Berdasarkan No BP, ISBN Judul, Penulis, Tahun"
                 value={searchInput}
                 onChange={onChangeSearchInput}
               />
             </div>
           </div>
+        </div>
+      </div> 
+      <div className="columns">
+        <div className="column is-half">
+          <div className="field">
+            <div className="control">
+              <input
+                type="text"
+                className="input"
+                placeholder="Cari Berdasarkan Isi Buku (Sinopsis)"
+                value={searchInputSynopsis}
+                onChange={onChangeSearchInputSynopsis}
+              />
+            </div>
+          </div>
+        </div>
+      </div>    
+      <div className="columns">
+        <div className="column is-one-quarter">
           <div className="field">
             <div className="control">
               <Select
@@ -508,23 +537,6 @@ const CollectionList = (props) => {
               ></Select>
             </div>
           </div>
-          {/* <div className="field">
-            <div className="control">
-              <Select
-                  className="basic-single"
-                  classNamePrefix="select"
-                  defaultValue={storyTypeOptions[0]}
-                  isClearable="true"
-                  isSearchable="true"
-                  value={story_type} 
-                  onChange={(e) => setStoryType(e)}
-                  options={storyTypeOptions}
-                  placeholder="Filter Jenis Cerita.."
-              ></Select>
-            </div>
-          </div> */}
-        </div>
-        <div className="column is-one-quarter">
           <div className="field">
             <div className="control">
               <Select
@@ -540,6 +552,8 @@ const CollectionList = (props) => {
               ></Select>
             </div>
           </div>
+        </div>
+        <div className="column is-one-quarter">
           <div className="field">
             <div className="control">
               <Select
@@ -555,18 +569,6 @@ const CollectionList = (props) => {
               ></Select>
             </div>
           </div>
-          {/* <div className="field">
-            <div className="control">
-                <RRMultiSelect
-                    classNamePrefix="select"
-                    options={digitalFormatOptions}
-                    isObject={["value","label"]}
-                    value={digital_format}
-                    onChange={setDigitalFormat}
-                    inputPlaceholder="Filter Format Digital.."
-                />
-            </div>
-          </div> */}
           <div className="buttons is-right">
             <button className="button is-link is-outlined" type="button" onClick={findByTitle}>Cari</button>
             <button className="button is-success is-outlined" onClick={toggleModalExport}>Cetak</button>

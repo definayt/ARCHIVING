@@ -12,7 +12,10 @@ export const getDigitalDatas = async(req, res) => {
             include:[
                 { model: DigitalFormat, attributes: ['digital_format'] }, 
                 { model: Users, attributes: ['name'] }, 
-            ]
+            ],
+            order: [
+                ['title', 'ASC'],
+            ],
         });
         res.status(200).json(response);
     } catch(error){
@@ -170,7 +173,10 @@ export const findAllDigitalData = (req, res) => {
         include:[
             { model: DigitalFormat, attributes: ['digital_format'] }, 
             { model: Users, attributes: ['name'] }, 
-        ]
+        ],
+        order: [
+            ['title', 'ASC'],
+        ],
     })
     .then(data => {
     const response = getPagingData(data, page, limit);
@@ -214,7 +220,10 @@ export const exportExcelDigitalData = async(req, res) => {
             include:[
                 { model: DigitalFormat, attributes: ['digital_format'] }, 
                 { model: Users, attributes: ['name'] }, 
-            ]
+            ],
+            order: [
+                ['title', 'ASC'],
+            ],
         });
         res.status(200).json(response);
         
