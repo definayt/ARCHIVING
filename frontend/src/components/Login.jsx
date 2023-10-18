@@ -2,7 +2,8 @@ import React, {useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoginUser, reset, getMe } from "../features/authSlice";
-
+import background from "../assets/img/Sign-in.png";
+import logo from "../assets/img/logo-BP.png";
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -26,18 +27,21 @@ const Login = () => {
         dispatch(LoginUser({email, password}));
     }
   return (
-    <section className="hero has-background-grey-light is-fullheight is-fullwidth">
+    <section className="hero has-background-grey-light is-fullheight is-fullwidth"style={{ backgroundImage: `url(${background})` }}>
       <div className="hero-body">
         <div className="container">
           <div className="columns is-centered">
             <div className="column is-4">
-                <form onSubmit={Auth} className='box'>
-                     {isError && <article className="message is-danger">
+                <form onSubmit={Auth} className='box' style={{boxShadow: "inset 0 -3em 3em rgba(0, 200, 0, 0.3)"}}>
+                    <div className='has-text-centered pb-3'>
+                        <img src={logo} style={{maxHeight: "3rem"}} alt='Logo Balai Pustaka' />
+                        <h1 className='title is-2'>Login</h1>
+                    </div>
+                    {isError && <article className="message is-danger">
                         <div className="message-body">
                         {message}
                         </div>
                     </article> }
-                    <h1 className='title is-2'>Login</h1>
                     <div className="field">
                         <label className="label">Email</label>
                         <div className="control">

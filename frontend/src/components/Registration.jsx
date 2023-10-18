@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { reset, getMe } from "../features/authSlice";
 import axios from 'axios';
 import SuccessModal from './SuccessModal';
+import background from "../assets/img/Sign-in.png";
+import logo from "../assets/img/logo-BP.png";
 
 const Registration = () => {
     const [name, setName] = useState("");
@@ -55,13 +57,17 @@ const Registration = () => {
     };
     
   return (
-    <section className="hero has-background-grey-light is-fullheight is-fullwidth">
+    <section className="hero has-background-grey-light is-fullheight is-fullwidth"style={{ backgroundImage: `url(${background})` }}>
       <SuccessModal confirmModal={navigation} modalState={modalState} msg={"Registrasi berhasil."}  />
       <div className="hero-body">
         <div className="container">
           <div className="columns is-centered">
             <div className="column is-4">
-                <form onSubmit={registration} className='box'>
+                <form onSubmit={registration} className='box' style={{boxShadow: "inset 0 -3em 3em rgba(0, 200, 0, 0.3)"}}>
+                    <div className='has-text-centered pb-3'>
+                        <img src={logo} style={{maxHeight: "3rem"}} alt='Logo Balai Pustaka' />
+                        <h1 className='title is-2'>Daftar</h1>
+                    </div>
                     {isError && message !== "Mohon Login Terlebih Dahulu" &&
                     <article className="message is-danger">
                         <div className="message-body">
@@ -75,7 +81,6 @@ const Registration = () => {
                         </div>
                      </article>
                      }
-                    <h1 className='title is-2'>Daftar</h1>
                     <div className="field">
                         <label className="label">Nama</label>
                         <div className="control">
