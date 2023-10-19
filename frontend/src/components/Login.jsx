@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { LoginUser, reset, getMe } from "../features/authSlice";
 import background from "../assets/img/Sign-in.png";
 import logo from "../assets/img/logo-BP.png";
@@ -32,9 +32,11 @@ const Login = () => {
         <div className="container">
           <div className="columns is-centered">
             <div className="column is-4">
-                <form onSubmit={Auth} className='box' style={{boxShadow: "inset 0 -3em 3em rgba(0, 200, 0, 0.3)"}}>
+                <form onSubmit={Auth} className='box'>
                     <div className='has-text-centered pb-3'>
-                        <img src={logo} style={{maxHeight: "3rem"}} alt='Logo Balai Pustaka' />
+                        <NavLink to="/">
+                            <img src={logo} style={{maxHeight: "3rem"}} alt='Logo Balai Pustaka' />
+                        </NavLink>
                         <h1 className='title is-2'>Login</h1>
                     </div>
                     {isError && <article className="message is-danger">

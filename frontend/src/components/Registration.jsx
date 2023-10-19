@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { reset, getMe } from "../features/authSlice";
 import axios from 'axios';
 import SuccessModal from './SuccessModal';
@@ -63,9 +63,11 @@ const Registration = () => {
         <div className="container">
           <div className="columns is-centered">
             <div className="column is-4">
-                <form onSubmit={registration} className='box' style={{boxShadow: "inset 0 -3em 3em rgba(0, 200, 0, 0.3)"}}>
+                <form onSubmit={registration} className='box'>
                     <div className='has-text-centered pb-3'>
-                        <img src={logo} style={{maxHeight: "3rem"}} alt='Logo Balai Pustaka' />
+                        <NavLink to="/" >
+                            <img src={logo} style={{maxHeight: "3rem"}} alt='Logo Balai Pustaka' />
+                        </NavLink>
                         <h1 className='title is-2'>Daftar</h1>
                     </div>
                     {isError && message !== "Mohon Login Terlebih Dahulu" &&
