@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LoginUser, reset, getMe } from "../features/authSlice";
+import { LogOut, reset, getMe } from "../features/authSlice";
 import slide1 from "../assets/img/1.png";
 import slide2 from "../assets/img/2.png";
 import slide3 from "../assets/img/3.png";
@@ -9,9 +9,39 @@ import slide4 from "../assets/img/4.png";
 import slide5 from "../assets/img/5.png";
 import logo from "../assets/img/logo-BP.png";
 import { Slide, Fade } from 'react-slideshow-image';
+import LogoutConfirmation from "./LogoutConfirmation";
 import 'react-slideshow-image/dist/styles.css';
 
 const Homepage = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [buttonActive, setButtonActive] = useState("nonactive");
+    const [name, setName] = useState("");
+    const {user, isError, isSuccess, isLoading, message} = useSelector((state) => state.auth);
+
+    useEffect(()=>{
+        dispatch(getMe());
+    }, [dispatch]);
+
+    useEffect(()=>{
+        if(user || isSuccess){
+            setButtonActive("active");
+            setName(user.name);
+        }
+        dispatch(reset());
+    }, [user, isSuccess, dispatch])
+
+    const [modalState, setModalState] = useState(false);
+    const toggleModal = () => {
+        setModalState(!modalState);
+    };
+    const logout = () => {
+        dispatch(LogOut());
+        dispatch(reset());
+        navigate("/dashboard");
+        setModalState(false);
+    };
+
   const [isActive, setisActive] = React.useState(false);
   return (
     <div>
@@ -39,19 +69,35 @@ const Homepage = () => {
         
             <div id="navbarBasicExample" className={`navbar-menu ${isActive ? "is-active" : ""}`}>
             <div className="navbar-end">
+                <div className='navbar-item'>{name}</div>
                 <div className="navbar-item">
-                <div className="buttons">
-                    <NavLink to="/login" className="navbar-item">
-                        <button className="button is-success">
-                        Login
+                { buttonActive==="nonactive" && (
+                    <div className="buttons">
+                        <NavLink to="/login" className="navbar-item">
+                            <button className="button is-success">
+                            Login
+                            </button>
+                        </NavLink>
+                        <NavLink to="/registration" className="navbar-item">
+                            <button className="button is-primary">
+                            Sign Up
+                            </button>
+                        </NavLink>            
+                    </div>
+                )}
+                { buttonActive==="active" && (
+                    <div className="buttons">
+                        <NavLink to="/dashboard" className="navbar-item">
+                            <button className="button is-success">
+                            Dashboard
+                            </button>
+                        </NavLink>
+                        <button onClick={() => toggleModal() } className="button is-danger">
+                            Logout
                         </button>
-                    </NavLink>
-                    <NavLink to="/registration" className="navbar-item">
-                        <button className="button is-primary">
-                        Sign Up
-                        </button>
-                    </NavLink>            
-                </div>
+                        <LogoutConfirmation confirmModal={logout} hideModal={toggleModal} modalState={modalState}  />           
+                    </div>
+                )}
                 </div>
             </div>
             </div>

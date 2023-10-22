@@ -26,8 +26,9 @@ const Sidebar = () => {
     const logout = () => {
         dispatch(LogOut());
         dispatch(reset());
-        navigate("/");
         setModalState(false);
+        navigate("/");
+        window.location.reload(true);
     };
   return (
     <div>

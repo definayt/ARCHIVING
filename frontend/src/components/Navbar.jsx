@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {NavLink, useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { LogOut, reset } from "../features/authSlice";
+import { LogOut, reset, getMe } from "../features/authSlice";
 import LogoutConfirmation from "./LogoutConfirmation";
 import {IoPerson, IoHome, IoBook, IoDocumentAttach,IoBookmark} from "react-icons/io5";
 import logo from "../assets/img/logo-BP.png";
@@ -9,18 +9,31 @@ import logo from "../assets/img/logo-BP.png";
 const Navbar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const {user} = useSelector((state => state.auth));
+    const {user, isError, isSuccess, isLoading, message} = useSelector((state) => state.auth);
+    const [name, setName] = useState("");
     
     const [modalState, setModalState] = useState(false);
     const [isActive, setisActive] = React.useState(false);
     const toggleModal = () => {
         setModalState(!modalState);
     };
+
+    useEffect(()=>{
+      dispatch(getMe());
+    }, [dispatch]);
+
+    useEffect(()=>{
+      if(user || isSuccess){
+          setName(user.name);
+      }
+    }, [user, dispatch])
+
     const logout = () => {
-        dispatch(LogOut());
-        dispatch(reset());
-        navigate("/");
-        setModalState(false);
+      dispatch(LogOut());
+      dispatch(reset());
+      setModalState(false);
+      navigate("/");
+      window.location.reload(true);
     };
   return (
     <div>
@@ -28,6 +41,7 @@ const Navbar = () => {
           <div className="navbar-brand">
             <NavLink to="/dashboard" className="navbar-item">
               <img src={logo} style={{minHeight: "3.5rem"}} alt='Logo Balai Pustaka' />
+              <p style={{fontSize: "1.2rem"}}>Balai Pustaka Archiving System</p>
             </NavLink>
         
             <a 
@@ -85,8 +99,14 @@ const Navbar = () => {
               )}
             </div>
             <div className="navbar-end">
+              <div className='navbar-item'>{name}</div>
               <div className="navbar-item">
                 <div className="buttons">
+                  <NavLink to="/" className="navbar-item">
+                    <button className="button is-success">
+                      Halaman Utama
+                    </button>
+                  </NavLink>
                   <button onClick={() => toggleModal() } className="button is-danger">
                     Logout
                   </button>

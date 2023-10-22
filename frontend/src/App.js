@@ -25,19 +25,21 @@ import AddCollection from "./pages/AddCollection";
 import EditCollection from "./pages/EditCollection";
 import CollectionList from "./pages/CollectionList";
 import DigitalDataList from "./pages/DigitalDataList";
+import DigitalData from "./pages/DigitalData";
 import PageViewCollection from "./pages/PageViewCollection";
 import CollectionsDataDigital from "./pages/CollectionsDataDigital";
 import CollectionsCategory from "./pages/CollectionsCategory";
 import CollectionsStoryType from "./pages/CollectionsStoryType";
 import CollectionsLanguage from "./pages/CollectionsLanguage";
 import CollectionsPublish1stYear from "./pages/CollectionsPublish1stYear";
+import Homepage from "./components/Homepage";
 
 function App() {
   return (
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login/>}/>
+          <Route path="/" element={<Homepage/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/registration" element={<Registration/>}/>
           <Route path="/dashboard" element={<Dashboard/>}/>
